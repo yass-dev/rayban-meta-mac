@@ -1,6 +1,6 @@
 # rayban-meta-mac
 
-**Import the photos and videos from your Ray-Ban Meta smart glasses to your Mac, at full quality, without a
+**Import the photos and videos from your Ray-Ban Meta Gen 2 smart glasses to your Mac, at full quality, without a
 phone.** This is an unofficial, open-source macOS app, with a menu bar app and a command line tool. It also shows
 the battery and status of the glasses, works as a remote shutter, and changes their settings.
 
@@ -13,7 +13,7 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
 
 **New to this?** Follow the [step-by-step install](#step-by-step-without-terminal): no Terminal, only clicks.
 
-![The Glasses app on a Mac, listing the photos and videos on a pair of Ray-Ban Meta glasses and marking which ones are already on the Mac](docs/screenshots/gallery.png)
+![The Glasses app on a Mac, listing the photos and videos on a pair of Ray-Ban Meta Gen 2 glasses and marking which ones are already on the Mac](docs/screenshots/gallery.png)
 
 <sub>The screenshots use sample data.</sub>
 
@@ -43,7 +43,7 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
 
 <table>
   <tr>
-    <td width="33%"><img src="docs/screenshots/import.png" alt="Home tab during an import from Ray-Ban Meta glasses: progress bar, transfer speed, battery and status"></td>
+    <td width="33%"><img src="docs/screenshots/import.png" alt="Home tab during an import from Ray-Ban Meta Gen 2 glasses: progress bar, transfer speed, battery and status"></td>
     <td width="33%"><img src="docs/screenshots/control.png" alt="Control and status tab: remote shutter buttons, clock sync, and the detailed status of the glasses"></td>
     <td width="33%"><img src="docs/screenshots/settings.png" alt="Settings tab: Meta AI and Hey Meta settings of the glasses, as switches"></td>
   </tr>
@@ -60,7 +60,8 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
   untested on Intel.
 - Apple's command line tools. The setup offers to install them; you only click Install.
 - About 12 GB of free disk during setup. You can reclaim most of it at the end.
-- Ray-Ban Meta glasses, and the Meta account they are set up with. Tested on the Gen 2.
+- Ray-Ban Meta Gen 2 glasses, and the Meta account they are set up with. Other Meta glasses are untested (see
+  [Which glasses work?](#faq)).
 - About 30 minutes, most of it waiting for downloads and builds.
 
 You don't need Homebrew, and the setup never asks for an administrator password. Java and the Android tools are
@@ -278,7 +279,7 @@ Other Meta glasses (Oakley Meta, Gen 1) speak the same protocol according to Vis
 
 ## FAQ
 
-**Can I get photos and videos off Ray-Ban Meta glasses without the Meta AI app?**
+**Can I get photos and videos off Ray-Ban Meta Gen 2 glasses without the Meta AI app?**
 Yes. Once the setup is done, the Mac lists and imports them straight from the glasses, with no phone and no Meta
 server involved. The setup needs your Meta account once, to pair the glasses (see
 [How the login works](#how-the-login-works)).
