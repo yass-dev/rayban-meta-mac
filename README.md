@@ -40,23 +40,86 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
 - Ray-Ban Meta glasses, and the Meta account they are set up with. Tested on the Gen 2.
 - About 30 minutes, most of it waiting for downloads and builds.
 
-You don't need Homebrew or an administrator password. Java and the Android tools are downloaded from their
-publishers, Eclipse Adoptium and Google, into your own Library folder, and each download's checksum is verified.
+You don't need Homebrew, and the setup never asks for an administrator password. Java and the Android tools are
+downloaded from their publishers, Eclipse Adoptium and Google, into your own Library folder, and each download's
+checksum is verified.
 
 ## Quick start
 
-There are two ways to run the same setup.
+There are two ways to run the same setup: a guided page in your browser where you only click, or a script in
+Terminal.
 
-### With a guided page (no Terminal needed)
+### Step by step, without Terminal
 
-1. On GitHub, click **Code > Download ZIP**, then open the ZIP (or `git clone` the repository).
-2. In the folder, double-click **`Install.command`**.
-3. Follow the page that opens in your browser. It shows every step with its progress, asks its questions as
-   buttons, and tells you when it needs you.
+You don't type any commands: you click, and you log in to Meta once. Allow about 30 minutes, most of it waiting.
 
-A Terminal window opens alongside the page and has to stay open; the setup itself happens in the page. If macOS
-says it cannot verify `Install.command` (files from a ZIP download are flagged), open **System Settings >
-Privacy & Security** and click **Open Anyway**, then double-click it again.
+**1. Download the project**
+
+1. At the top of this page on GitHub, click the green **Code** button, then **Download ZIP**.
+2. Open the ZIP in your Downloads folder by double-clicking it, if your browser has not already done so (Safari
+   does). You get a folder named `rayban-meta-mac-main`.
+3. Keep that folder. You need it again if you ever have to log in to Meta again or pair the glasses again. If you
+   want it somewhere else, for example in Documents, move it now, before you start.
+
+**2. Start the setup**
+
+1. In the folder, double-click **`Install.command`**.
+2. The first time, macOS refuses to open it and says it could not verify it. This happens to every file
+   downloaded from the internet that does not come from the App Store. Click **Done** (not Move to Trash).
+3. Open **System Settings > Privacy & Security** and scroll down to **Security**. Next to the line about
+   `Install.command`, click **Open Anyway**, then confirm with your password or Touch ID. If macOS asks once more,
+   click **Open Anyway** again. If nothing opens, double-click `Install.command` again.
+4. A Terminal window opens. Leave it open until the end; you don't need to type anything in it. If macOS asks
+   whether Terminal may access files in your Downloads (or Documents) folder, click **Allow**.
+5. If Apple's command line tools are missing, macOS offers to install them. Click **Install**, then **Agree**,
+   and wait until they are installed (a few minutes). The setup carries on by itself.
+6. After about a minute, the setup page opens in your browser. If it does not, open
+   <http://127.0.0.1:47393/>.
+
+**3. Follow the page**
+
+Click **Start the setup**. The page shows the seven steps and their progress. It stops only when it needs you:
+
+1. **Download the Android tools?** Click **Continue**. Meta only hands its login to an Android app, so the setup
+   downloads Java and Google's Android tools (about 10 GB) to run one on the Mac. This is the long part, 15 to 30
+   minutes.
+2. **Your turn: log in to Meta.** A window that looks like a phone screen opens with the Visor app. Log in there
+   with the Meta account your glasses are set up with. Use the Mac's keyboard and mouse, and if Meta sends you a
+   code, type it there too. The page carries on by itself once you are logged in, and the window closes.
+3. **Make this Mac the owner of the glasses?** Read the warning, then click **Yes, pair them**.
+4. **Get the glasses ready.** Turn Bluetooth off on your phone. Take the glasses out of the case, open the arms,
+   and keep them next to the Mac. Hold the capture button until the light blinks blue, then click **The light is
+   blinking blue: pair now**.
+   - macOS asks whether Terminal may use Bluetooth: allow it.
+   - A Bluetooth connection request for the glasses appears: click **Connect**.
+   - If it does not work, the page asks you to put the glasses back in pairing mode and try again.
+5. **Free … GB?** Click **Remove**. The Android tools were only needed for the login; if you ever log in again,
+   the setup downloads them again.
+6. **Setup finished.** Click **Open Glasses**. The page turns into the Glasses app, and you can close the Terminal
+   window and turn Bluetooth back on on your phone.
+
+If a step fails, the page says what to do and offers **Try again**: the steps already done are skipped. If you
+closed the Terminal window by mistake, double-click `Install.command` again and the setup continues where it
+stopped.
+
+**4. Use Glasses**
+
+Glasses lives in the menu bar, as a glasses icon at the top right of the screen, not in the Dock. To open it later,
+click that icon and choose **Open Glasses**, or search for "Glasses" in Spotlight.
+
+1. Keep the glasses out of the case with the arms open, and click **Connect**. The first time, macOS asks whether
+   Glasses may use Bluetooth: allow it.
+2. On **Home**, click **Import what is missing**. The first time, macOS asks whether Glasses may access the folder
+   the files go to (in Pictures), and whether it may find devices on your local network: allow both, or the
+   import cannot work.
+3. During the import the Mac leaves your Wi-Fi for the glasses' own Wi-Fi, so it has no internet for a few
+   minutes. It goes back to your Wi-Fi by itself.
+
+**Later**
+
+- **To update**, download the ZIP again, open its `Install.command` the same way (macOS asks for **Open Anyway**
+  again), and click **Check everything again**. The setup rebuilds Glasses and skips what is already done.
+- **To log in to Meta again or pair again**, double-click `Install.command` and open **More options**.
 
 ### In Terminal
 
