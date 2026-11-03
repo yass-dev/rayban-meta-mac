@@ -19,166 +19,81 @@ const h = (tag, attrs = {}, ...kids) => {
 // ---------- words
 
 const T = {
-  en: {
-    title: 'Set up Ray-Ban Meta for Mac',
-    subtitle: 'Your photos and videos, straight from the glasses to this Mac',
-    dead: 'This page lost the setup. If you closed its Terminal window, double-click Install.command again.',
-    intro: 'This page installs everything on this Mac and pairs your glasses with it. The first time takes about 30 minutes, mostly downloads. You can follow every step here, and the page tells you when it needs you.',
-    needTitle: 'Before you start',
-    need1: 'Your Ray-Ban Meta glasses, charged, and the Meta account they are set up with.',
-    need2: 'About 12 GB of free disk space. You get most of it back at the end.',
-    need3: 'Your phone nearby: you will turn its Bluetooth off for a minute.',
-    unofficial: 'Unofficial: not made by Meta. Your Mac becomes the owner of the glasses, so the Meta AI app on your phone loses them until you set them up there again. This may be against Meta\'s terms of use.',
-    start: 'Start the setup',
-    alreadyTitle: 'This Mac is already set up',
-    alreadyText: (s) => `This Mac owns your glasses${s ? ` (serial ${s})` : ''} and is logged in to Meta. Open Lunettes to import and control them.`,
-    partialText: 'A previous setup did not finish. Start it again: what is done is skipped.',
-    openApp: 'Open Lunettes',
-    recheck: 'Check everything again',
-    advanced: 'More options',
-    relogin: 'Log in to Meta again',
-    repair: 'Pair the glasses again',
-    cleanupOnly: 'Free the space used by the Android tools',
-    stop: 'Stop',
-    details: 'Technical details',
-    showLog: 'Show the log file in Finder',
-    copy: 'Copy',
-    copied: 'Copied',
-    running: 'Setting up…',
-    finished: 'Setup finished',
-    stoppedTitle: 'Setup stopped',
-    failedTitle: 'Setup stopped on an error',
-    elapsed: (t) => `· ${t}`,
-    steps: {
-      mac: ['Checking this Mac', 'macOS version and Apple\'s developer tools.'],
-      build: ['Building the app', 'Compiles the Mac app from its source code.'],
-      tokens: ['Meta app tokens', 'Reads the identifiers the Meta AI app uses, from Visor\'s public release.'],
-      login: ['Meta login', 'You log in to your Meta account, in an Android window.'],
-      pair: ['Pairing the glasses', 'Your Mac becomes the owner of the glasses.'],
-      app: ['Installing Lunettes', 'The menu bar app you will use to import and control.'],
-      cleanup: ['Cleaning up', 'Frees the space the Android tools took.'],
-    },
-    status: { pending: 'Waiting', running: 'In progress', done: 'Done', skipped: 'Already done', failed: 'Failed' },
-    loginConsentTitle: 'Download the Android tools?',
-    loginConsent: 'Meta gives its login only to its own Android login screen. To get it, the setup downloads Java and Google\'s Android tools (about 10 GB in all), builds Visor, an open-source app for these glasses, and opens it in an Android window where you log in. Allow 15 to 30 minutes. Continuing accepts the Android SDK licenses.',
-    continue: 'Continue',
-    notNow: 'Not now',
-    loginWaitTitle: 'Your turn: log in to Meta',
-    loginWait: 'An Android window has opened with the Visor app. Log in there with the Meta account your glasses use. Your password goes to Meta only: this page just waits for the result. Your Mac\'s keyboard works in that window.',
-    waiting: (t) => `Waiting for you… ${t}`,
-    pairConsentTitle: 'Make this Mac the owner of the glasses?',
-    pairConsent: 'The glasses accept one owner. From now on it will be this Mac: the Meta AI app on your phone loses the glasses until you set them up there again, which takes them back. This is not an official Meta feature.',
-    pairYes: 'Yes, pair them',
-    pairReadyTitle: 'Get the glasses ready',
-    pair1: 'Turn Bluetooth off on your phone.',
-    pair2: 'Take the glasses out of the case and open the arms, next to the Mac.',
-    pair3: 'Hold the capture button until the light blinks blue: that is pairing mode.',
-    pair4: 'On the Mac, accept what macOS asks: let Terminal use Bluetooth, then click Connect.',
-    pairRetry: 'That did not work. Put the glasses back in pairing mode, then try again.',
-    pairGo: 'The light is blinking blue: pair now',
-    pairingNow: 'Pairing… Keep the glasses next to the Mac, and click Connect if macOS asks.',
-    cleanupTitle: (gb) => `Free ${gb}?`,
-    cleanupText: 'The Android tools were only needed for the Meta login. Remove them now? If you ever need to log in again, the setup downloads them again.',
-    remove: 'Remove',
-    keep: 'Keep',
-    doneText: (dir) => `Lunettes is in your menu bar: the glasses icon. Your photos and videos will go to ${dir}.`,
-    doneNoDir: 'Lunettes is in your menu bar: the glasses icon.',
-    openingApp: 'Opening Lunettes…',
-    failedHint: 'Fix what the message says, then try again: the steps already done are skipped.',
-    stoppedHint: 'Nothing is lost: start again and the setup continues where it stopped.',
-    retry: 'Try again',
-    resume: 'Continue the setup',
-    stopConfirmTitle: 'Stop the setup?',
-    stopConfirm: 'The current step stops. You can continue later: what is done is kept.',
-    cancel: 'Cancel',
+  title: 'Set up Ray-Ban Meta for Mac',
+  subtitle: 'Your photos and videos, straight from the glasses to this Mac',
+  dead: 'This page lost the setup. If you closed its Terminal window, double-click Install.command again.',
+  intro: 'This page installs everything on this Mac and pairs your glasses with it. The first time takes about 30 minutes, mostly downloads. You can follow every step here, and the page tells you when it needs you.',
+  needTitle: 'Before you start',
+  need1: 'Your Ray-Ban Meta glasses, charged, and the Meta account they are set up with.',
+  need2: 'About 12 GB of free disk space. You get most of it back at the end.',
+  need3: 'Your phone nearby: you will turn its Bluetooth off for a minute.',
+  unofficial: 'Unofficial: not made by Meta. Your Mac becomes the owner of the glasses, so the Meta AI app on your phone loses them until you set them up there again. This may be against Meta\'s terms of use.',
+  start: 'Start the setup',
+  alreadyTitle: 'This Mac is already set up',
+  alreadyText: (s) => `This Mac owns your glasses${s ? ` (serial ${s})` : ''} and is logged in to Meta. Open Glasses to import and control them.`,
+  partialText: 'A previous setup did not finish. Start it again: what is done is skipped.',
+  openApp: 'Open Glasses',
+  recheck: 'Check everything again',
+  advanced: 'More options',
+  relogin: 'Log in to Meta again',
+  repair: 'Pair the glasses again',
+  cleanupOnly: 'Free the space used by the Android tools',
+  stop: 'Stop',
+  details: 'Technical details',
+  showLog: 'Show the log file in Finder',
+  copy: 'Copy',
+  copied: 'Copied',
+  running: 'Setting up…',
+  finished: 'Setup finished',
+  stoppedTitle: 'Setup stopped',
+  failedTitle: 'Setup stopped on an error',
+  elapsed: (t) => `· ${t}`,
+  steps: {
+    mac: ['Checking this Mac', 'macOS version and Apple\'s developer tools.'],
+    build: ['Building the app', 'Compiles the Mac app from its source code.'],
+    tokens: ['Meta app tokens', 'Reads the identifiers the Meta AI app uses, from Visor\'s public release.'],
+    login: ['Meta login', 'You log in to your Meta account, in an Android window.'],
+    pair: ['Pairing the glasses', 'Your Mac becomes the owner of the glasses.'],
+    app: ['Installing Glasses', 'The menu bar app you will use to import and control.'],
+    cleanup: ['Cleaning up', 'Frees the space the Android tools took.'],
   },
-  fr: {
-    title: 'Installer Ray-Ban Meta pour Mac',
-    subtitle: 'Tes photos et vidéos, des lunettes directement vers ce Mac',
-    dead: 'Cette page a perdu l\'installation. Si tu as fermé sa fenêtre Terminal, double-clique à nouveau sur Install.command.',
-    intro: 'Cette page installe tout sur ce Mac et y appaire tes lunettes. La première fois prend environ 30 minutes, surtout des téléchargements. Tu suis chaque étape ici, et la page te prévient quand elle a besoin de toi.',
-    needTitle: 'Avant de commencer',
-    need1: 'Tes lunettes Ray-Ban Meta, chargées, et le compte Meta avec lequel elles sont configurées.',
-    need2: 'Environ 12 Go d\'espace libre. Tu en récupères l\'essentiel à la fin.',
-    need3: 'Ton téléphone à portée de main : tu couperas son Bluetooth une minute.',
-    unofficial: 'Non officiel : pas fait par Meta. Ton Mac devient propriétaire des lunettes, donc l\'app Meta AI de ton téléphone les perd jusqu\'à ce que tu les y reconfigures. Cela peut aller contre les conditions d\'utilisation de Meta.',
-    start: 'Lancer l\'installation',
-    alreadyTitle: 'Ce Mac est déjà installé',
-    alreadyText: (s) => `Ce Mac est propriétaire de tes lunettes${s ? ` (série ${s})` : ''} et connecté à Meta. Ouvre Lunettes pour les importer et les piloter.`,
-    partialText: 'Une installation précédente ne s\'est pas terminée. Relance-la : ce qui est fait est sauté.',
-    openApp: 'Ouvrir Lunettes',
-    recheck: 'Tout revérifier',
-    advanced: 'Plus d\'options',
-    relogin: 'Se reconnecter à Meta',
-    repair: 'Réappairer les lunettes',
-    cleanupOnly: 'Libérer l\'espace des outils Android',
-    stop: 'Arrêter',
-    details: 'Détails techniques',
-    showLog: 'Afficher le journal dans le Finder',
-    copy: 'Copier',
-    copied: 'Copié',
-    running: 'Installation en cours…',
-    finished: 'Installation terminée',
-    stoppedTitle: 'Installation arrêtée',
-    failedTitle: 'L\'installation s\'est arrêtée sur une erreur',
-    elapsed: (t) => `· ${t}`,
-    steps: {
-      mac: ['Vérification du Mac', 'Version de macOS et outils de développement d\'Apple.'],
-      build: ['Compilation de l\'application', 'Compile l\'app Mac à partir de son code source.'],
-      tokens: ['Jetons de l\'app Meta', 'Lit les identifiants qu\'utilise l\'app Meta AI, dans la version publique de Visor.'],
-      login: ['Connexion à Meta', 'Tu te connectes à ton compte Meta, dans une fenêtre Android.'],
-      pair: ['Appairage des lunettes', 'Ton Mac devient propriétaire des lunettes.'],
-      app: ['Installation de Lunettes', 'L\'app de la barre des menus pour importer et piloter.'],
-      cleanup: ['Nettoyage', 'Libère l\'espace pris par les outils Android.'],
-    },
-    status: { pending: 'En attente', running: 'En cours', done: 'Fait', skipped: 'Déjà fait', failed: 'Échec' },
-    loginConsentTitle: 'Télécharger les outils Android ?',
-    loginConsent: 'Meta ne donne sa connexion qu\'à son propre écran de connexion Android. Pour l\'obtenir, l\'installation télécharge Java et les outils Android de Google (environ 10 Go au total), compile Visor, une app open source pour ces lunettes, et l\'ouvre dans une fenêtre Android où tu te connectes. Compte 15 à 30 minutes. Continuer vaut acceptation des licences du SDK Android.',
-    continue: 'Continuer',
-    notNow: 'Pas maintenant',
-    loginWaitTitle: 'À toi : connecte-toi à Meta',
-    loginWait: 'Une fenêtre Android s\'est ouverte avec l\'app Visor. Connecte-toi avec le compte Meta de tes lunettes. Ton mot de passe ne va qu\'à Meta : cette page attend juste le résultat. Le clavier du Mac fonctionne dans cette fenêtre.',
-    waiting: (t) => `En attente de ta connexion… ${t}`,
-    pairConsentTitle: 'Rendre ce Mac propriétaire des lunettes ?',
-    pairConsent: 'Les lunettes n\'acceptent qu\'un propriétaire. Ce sera désormais ce Mac : l\'app Meta AI de ton téléphone perd les lunettes jusqu\'à ce que tu les y reconfigures, ce qui les reprend. Ce n\'est pas une fonction officielle de Meta.',
-    pairYes: 'Oui, les appairer',
-    pairReadyTitle: 'Prépare les lunettes',
-    pair1: 'Coupe le Bluetooth de ton téléphone.',
-    pair2: 'Sors les lunettes de l\'étui et ouvre les branches, à côté du Mac.',
-    pair3: 'Maintiens le bouton capture jusqu\'à ce que le voyant clignote en bleu : c\'est le mode appairage.',
-    pair4: 'Sur le Mac, accepte ce que demande macOS : laisser Terminal utiliser le Bluetooth, puis « Se connecter ».',
-    pairRetry: 'Ça n\'a pas marché. Remets les lunettes en mode appairage, puis réessaie.',
-    pairGo: 'Le voyant clignote en bleu : appairer',
-    pairingNow: 'Appairage… Garde les lunettes à côté du Mac, et clique « Se connecter » si macOS le demande.',
-    cleanupTitle: (gb) => `Libérer ${gb} ?`,
-    cleanupText: 'Les outils Android ne servaient qu\'à la connexion Meta. Les supprimer maintenant ? Si tu dois te reconnecter un jour, l\'installation les retélécharge.',
-    remove: 'Supprimer',
-    keep: 'Garder',
-    doneText: (dir) => `Lunettes est dans ta barre des menus : l'icône des lunettes. Tes photos et vidéos iront dans ${dir}.`,
-    doneNoDir: 'Lunettes est dans ta barre des menus : l\'icône des lunettes.',
-    openingApp: 'Ouverture de Lunettes…',
-    failedHint: 'Corrige ce que dit le message, puis réessaie : les étapes déjà faites sont sautées.',
-    stoppedHint: 'Rien n\'est perdu : relance, l\'installation reprend où elle s\'est arrêtée.',
-    retry: 'Réessayer',
-    resume: 'Reprendre l\'installation',
-    stopConfirmTitle: 'Arrêter l\'installation ?',
-    stopConfirm: 'L\'étape en cours s\'arrête. Tu pourras reprendre plus tard : ce qui est fait est gardé.',
-    cancel: 'Annuler',
-  },
+  status: { pending: 'Waiting', running: 'In progress', done: 'Done', skipped: 'Already done', failed: 'Failed' },
+  loginConsentTitle: 'Download the Android tools?',
+  loginConsent: 'Meta gives its login only to its own Android login screen. To get it, the setup downloads Java and Google\'s Android tools (about 10 GB in all), builds Visor, an open-source app for these glasses, and opens it in an Android window where you log in. Allow 15 to 30 minutes. Continuing accepts the Android SDK licenses.',
+  continue: 'Continue',
+  notNow: 'Not now',
+  loginWaitTitle: 'Your turn: log in to Meta',
+  loginWait: 'An Android window has opened with the Visor app. Log in there with the Meta account your glasses use. Your password goes to Meta only: this page just waits for the result. Your Mac\'s keyboard works in that window.',
+  waiting: (t) => `Waiting for you… ${t}`,
+  pairConsentTitle: 'Make this Mac the owner of the glasses?',
+  pairConsent: 'The glasses accept one owner. From now on it will be this Mac: the Meta AI app on your phone loses the glasses until you set them up there again, which takes them back. This is not an official Meta feature.',
+  pairYes: 'Yes, pair them',
+  pairReadyTitle: 'Get the glasses ready',
+  pair1: 'Turn Bluetooth off on your phone.',
+  pair2: 'Take the glasses out of the case and open the arms, next to the Mac.',
+  pair3: 'Hold the capture button until the light blinks blue: that is pairing mode.',
+  pair4: 'On the Mac, accept what macOS asks: let Terminal use Bluetooth, then click Connect.',
+  pairRetry: 'That did not work. Put the glasses back in pairing mode, then try again.',
+  pairGo: 'The light is blinking blue: pair now',
+  pairingNow: 'Pairing… Keep the glasses next to the Mac, and click Connect if macOS asks.',
+  cleanupTitle: (gb) => `Free ${gb}?`,
+  cleanupText: 'The Android tools were only needed for the Meta login. Remove them now? If you ever need to log in again, the setup downloads them again.',
+  remove: 'Remove',
+  keep: 'Keep',
+  doneText: (dir) => `Glasses is in your menu bar: the glasses icon. Your photos and videos will go to ${dir}.`,
+  doneNoDir: 'Glasses is in your menu bar: the glasses icon.',
+  openingApp: 'Opening Glasses…',
+  failedHint: 'Fix what the message says, then try again: the steps already done are skipped.',
+  stoppedHint: 'Nothing is lost: start again and the setup continues where it stopped.',
+  retry: 'Try again',
+  resume: 'Continue the setup',
+  stopConfirmTitle: 'Stop the setup?',
+  stopConfirm: 'The current step stops. You can continue later: what is done is kept.',
+  cancel: 'Cancel',
 };
 
-let lang = 'en';
-try { lang = localStorage.getItem('setup-lang') || (navigator.language || '').slice(0, 2); } catch {}
-if (!T[lang]) lang = 'en';
-const t = (k, ...a) => { const v = T[lang][k] ?? T.en[k]; return typeof v === 'function' ? v(...a) : v; };
-
-function applyLang() {
-  document.documentElement.lang = lang;
-  $$('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
-  $$('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
-  render();
-}
-$$('[data-lang]').forEach(b => b.addEventListener('click', () => { lang = b.dataset.lang; try { localStorage.setItem('setup-lang', lang); } catch {} applyLang(); }));
+const t = (k, ...a) => { const v = T[k]; return typeof v === 'function' ? v(...a) : v; };
+const fillWords = () => $$('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
 
 // ---------- helpers
 
@@ -257,7 +172,7 @@ function render() {
 let lastFocus = '';
 
 function stepCard(st) {
-  const [title, desc] = (T[lang].steps[st.key] || T.en.steps[st.key] || [st.title, '']);
+  const [title, desc] = (T.steps[st.key] || [st.title, '']);
   const icon = { done: '✓', skipped: '✓', failed: '✗', running: '', pending: String(S.steps.indexOf(st) + 1) }[st.status];
   const card = h('li', { class: `step ${st.status}` },
     h('div', { class: 'step-head' },
@@ -309,8 +224,7 @@ function youCard(st) {
   }
   if (p && p.key === 'cleanup') {
     const gb = (p.text.match(/\(([\d.,]+ GB)\)/) || [])[1] || '';
-    const size = lang === 'fr' ? gb.replace('GB', 'Go').replace('.', ',') : gb;
-    return h('div', { class: 'you' }, h('h4', {}, t('cleanupTitle', size)), h('p', {}, t('cleanupText')),
+    return h('div', { class: 'you' }, h('h4', {}, t('cleanupTitle', gb)), h('p', {}, t('cleanupText')),
       btns(h('button', { class: 'primary', onclick: () => answer(p.key, 'yes') }, t('remove')), h('button', { onclick: () => answer(p.key, 'no') }, t('keep'))));
   }
   if (p) {
@@ -351,12 +265,12 @@ function renderResult() {
   }
 }
 
-// ---------- the end: hand over to Lunettes
+// ---------- the end: hand over to Glasses
 
 async function openApp(e) {
   const btn = e?.target;
   if (btn) { btn.disabled = true; btn.textContent = t('openingApp'); }
-  // Lunettes answers on its own port once started; the setup server then leaves.
+  // Glasses answers on its own port once started; the setup server then leaves.
   for (let i = 0; i < 60; i++) {
     try {
       await fetch('http://127.0.0.1:47392/api/state', { mode: 'no-cors', cache: 'no-store' });
@@ -401,5 +315,5 @@ $('#stopBtn').addEventListener('click', async () => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').classList.add('hidden'); });
 
-applyLang();
+fillWords();
 connect();

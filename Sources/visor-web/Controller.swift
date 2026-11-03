@@ -10,7 +10,7 @@ struct WebPrefs: Codable {
     var deleteAfterImport = false
     var keepLogs = false
     var autoPreviews = true
-    var country = "FR"
+    var country = Locale.current.region?.identifier ?? "US"
     var exportDir: String?
 }
 
@@ -232,18 +232,18 @@ final class Controller {
             busy = Busy(op: op, label: label, detail: nil, started: Date(), cancellable: cancellable)
             return nil
         }
-        if let current { return .error(409, "Une opération est déjà en cours : \(current)") }
+        if let current { return .error(409, "Something else is running: \(current)") }
         log("▶ \(label)")
         pushState()
         let t = Task { [weak self] in
             guard let self else { return }
-            var result: (Bool, String) = (true, "\(label) : terminé")
+            var result: (Bool, String) = (true, "\(label): done")
             do {
                 try await body()
             } catch is CancellationError {
-                result = (false, "\(label) : annulé")
+                result = (false, "\(label): cancelled")
             } catch {
-                result = (false, "\(label) : \(Controller.friendly(error))")
+                result = (false, "\(label): \(Controller.friendly(error))")
             }
             self.log(result.1, result.0 ? "ok" : "error")
             self.lock.withLock {
@@ -259,22 +259,22 @@ final class Controller {
 
     func cancel() -> HTTPResponse {
         let (t, opening): (Task<Void, Never>?, GlassesSession?) = lock.withLock { busy?.cancellable == true ? (task, connecting) : (nil, nil) }
-        guard let t else { return .error(409, "Rien à annuler") }
+        guard let t else { return .error(409, "Nothing to cancel") }
         t.cancel()
         opening?.close()
-        log("Annulation demandée", "warn")
+        log("Cancel requested", "warn")
         return .ok()
     }
 
     static func friendly(_ error: Error) -> String {
         let text = "\(error)"
         if text.contains("timed out waiting for LE connection") || text.contains("did not open the link") {
-            return "les lunettes ne répondent pas en Bluetooth. Sors-les de l'étui, ouvre les branches, approche-les du Mac et réessaie. Si ça ne passe toujours pas : mode appairage (bouton capture maintenu jusqu'au clignotement bleu) et Bluetooth de l'iPhone coupé."
+            return "the glasses do not answer over Bluetooth. Take them out of the case, open the arms, bring them close to the Mac and try again. If it still fails: put them in pairing mode (hold the capture button until the light blinks blue) and turn off Bluetooth on your phone."
         }
-        if text.contains("Bluetooth LE powered on") { return "le Bluetooth ne répond pas : si macOS affiche une demande d'accès au Bluetooth pour « Lunettes », accepte-la puis réessaie." }
-        if text.contains("Bluetooth is off") || text.contains("poweredOff") { return "le Bluetooth du Mac est coupé : rallume-le dans le Centre de contrôle." }
-        if text.contains("unauthorized") { return "macOS n'autorise pas l'accès au Bluetooth : Réglages Système > Confidentialité et sécurité > Bluetooth." }
-        if text.contains("could not join") { return "le Mac n'a pas pu rejoindre le Wi-Fi des lunettes (\(text))." }
+        if text.contains("Bluetooth LE powered on") { return "Bluetooth does not answer: if macOS asks whether “Glasses” may use Bluetooth, allow it, then try again." }
+        if text.contains("Bluetooth is off") || text.contains("poweredOff") { return "the Mac's Bluetooth is off: turn it on in Control Center." }
+        if text.contains("unauthorized") { return "macOS does not allow Bluetooth access: System Settings > Privacy & Security > Bluetooth." }
+        if text.contains("could not join") { return "the Mac could not join the glasses' Wi-Fi (\(text))." }
         return text
     }
 
@@ -283,15 +283,15 @@ final class Controller {
     func ensureSession() async throws -> GlassesSession {
         if let s = lock.withLock({ conn == .connected ? session : nil }) { return s }
         guard let key = try store.ownerKey() else {
-            throw UIError("ce Mac n'a pas encore de clé de propriétaire : fais l'appairage dans l'onglet Compte.")
+            throw UIError("this Mac has no owner key yet: pair it in the Account tab.")
         }
         lock.withLock { conn = .connecting; connError = nil }
-        setDetail("Connexion Bluetooth aux lunettes (jusqu'à 4 min). Lunettes hors de l'étui, près du Mac.")
+        setDetail("Connecting to the glasses over Bluetooth (up to 4 min). Glasses out of the case, near the Mac.")
         let t = LeTransport(identifier: store.leIdentifier(), scanSeconds: 30)
         t.log = { [weak self] in self?.log($0, "debug") }
         let s = GlassesSession(transport: t, ownerKey: key)
         s.log = { [weak self] in self?.log($0, "debug") }
-        s.onUnhandled = { [weak self] m, svc in self?.log(String(format: "svc %d type 0x%04x, %d octets (non traité)", svc, m.info.messageType, m.payload.count), "debug") }
+        s.onUnhandled = { [weak self] m, svc in self?.log(String(format: "svc %d type 0x%04x, %d bytes (not handled)", svc, m.info.messageType, m.payload.count), "debug") }
         s.onLost = { [weak self, weak s] error in self?.lost(s, error) }
         lock.withLock { connecting = s }
         defer { lock.withLock { if connecting === s { connecting = nil } } }
@@ -307,10 +307,10 @@ final class Controller {
         }
         if let id = t.peripheralIdentifier, id != store.leIdentifier() { store.saveLeIdentifier(id) }
         if let tr = s.trustResult, !tr.complete {
-            log("Confiance incomplète avec les lunettes : elles risquent de refuser les commandes", "warn")
+            log("Incomplete trust with the glasses: they may refuse commands", "warn")
         }
         lock.withLock { session = s; conn = .connected; connError = nil }
-        log("Connecté aux lunettes en Bluetooth", "ok")
+        log("Connected to the glasses over Bluetooth", "ok")
         pushState()
         if let info = try? await s.peerDeviceInfo() { lock.withLock { device = info }; pushState() }
         for hook in onSession { await hook(s) }
@@ -322,7 +322,7 @@ final class Controller {
             guard let s, session === s else { return false }
             session = nil
             conn = .disconnected
-            connError = "connexion perdue (\(error))"
+            connError = "connection lost (\(error))"
             return true
         }
         if mine { log("Connexion Bluetooth perdue", "warn"); pushState() }
@@ -337,7 +337,7 @@ final class Controller {
     func disconnect() {
         let s = lock.withLock { () -> GlassesSession? in let s = session; session = nil; conn = .disconnected; connError = nil; return s }
         s?.close()
-        log("Déconnecté")
+        log("Disconnected")
         pushState()
     }
 
@@ -345,11 +345,11 @@ final class Controller {
 
     func refresh(previews: Bool) async throws {
         let s = try await ensureSession()
-        setDetail("Lecture de la liste des photos et vidéos…")
+        setDetail("Reading the list of photos and videos…")
         let list = try await s.listCaptures()
         lock.withLock { captures = list; capturesAt = Date() }
         let media = list.filter(\.isMedia)
-        log("\(media.count) photos et vidéos sur les lunettes")
+        log("\(media.count) photos and videos on the glasses")
         pushState()
         if previews { try await fetchPreviews(s, media) }
     }
@@ -360,13 +360,13 @@ final class Controller {
         let fetcher = PreviewFetcher(session: s, directory: previewsDir)
         fetcher.log = { [weak self] in self?.log($0, "debug") }
         var n = 0
-        setDetail("Aperçus : 0 / \(missing.count)")
+        setDetail("Previews: 0 / \(missing.count)")
         fetcher.onPreview = { [weak self] _, _ in
             n += 1
-            self?.setDetail("Aperçus : \(n) / \(missing.count)")
+            self?.setDetail("Previews: \(n) / \(missing.count)")
         }
         let got = try await fetcher.fetchMissing(missing)
-        log("\(got) aperçus reçus sur \(missing.count)", got == missing.count ? "info" : "warn")
+        log("\(got) of \(missing.count) previews received", got == missing.count ? "info" : "warn")
     }
 
     // MARK: import
@@ -379,7 +379,7 @@ final class Controller {
 
     func importMedia(_ r: ImportRequest) async throws {
         let s = try await ensureSession()
-        setDetail("Lecture de la liste…")
+        setDetail("Reading the list…")
         let list = try await s.listCaptures()
         lock.withLock { captures = list; capturesAt = Date() }
         pushState()
@@ -392,14 +392,14 @@ final class Controller {
         case "selected": let wanted = Set(r.handles ?? []); chosen = media.filter { wanted.contains($0.handle) }
         default: chosen = media.filter { mac[$0.handle] == nil }
         }
-        guard !chosen.isEmpty else { log("Rien à importer : tout est déjà sur le Mac"); return }
-        guard let key = try store.ownerKey() else { throw UIError("pas de clé de propriétaire") }
+        guard !chosen.isEmpty else { log("Nothing to import: everything is already on the Mac"); return }
+        guard let key = try store.ownerKey() else { throw UIError("no owner key") }
         let p = prefs
         var options = MediaImport.Options(output: exportDir)
         options.country = p.country
         options.keepLogs = p.keepLogs
         let total = chosen.reduce(UInt64(0)) { $0 + $1.wanted.reduce(0) { $0 + $1.size } }
-        log("Import de \(chosen.count) éléments (\(sizeWords(total)))")
+        log("Importing \(chosen.count) items (\(sizeWords(total)))")
         var bytes: [String: UInt64] = [:]
         var firstByte: Date?
         let progressLock = NSLock()
@@ -421,13 +421,13 @@ final class Controller {
             guard let self else { return }
             progressLock.withLock { for a in saved.capture.wanted { bytes[a.id] = a.size } }
             self.store.markImported(saved.capture.handle, files: saved.files.map(\.lastPathComponent))
-            self.log("Enregistré : \(saved.files.map(\.lastPathComponent).joined(separator: ", "))", "ok")
+            self.log("Saved: \(saved.files.map(\.lastPathComponent).joined(separator: ", "))", "ok")
             self.pushState()
         }
         job.onOffline = { [weak self] off in
             guard let self else { return }
             self.lock.withLock { self.offline = off }
-            self.log(off ? "Le Mac passe sur le Wi-Fi des lunettes : plus d'internet pendant le transfert" : "Le Mac revient sur son Wi-Fi", off ? "warn" : "info")
+            self.log(off ? "The Mac switches to the glasses' Wi-Fi: no internet during the transfer" : "The Mac is back on its Wi-Fi", off ? "warn" : "info")
             self.pushState()
         }
         setProgress(done: 0, total: total, rate: nil)
@@ -437,7 +437,7 @@ final class Controller {
         defer { s.close(); lock.withLock { offline = false } }
         try await job.run()
         let saved = job.saved
-        log("Import : \(saved.count) sur \(chosen.count) enregistrés dans \(exportDir.path)", saved.count == chosen.count ? "ok" : "warn")
+        log("Import: \(saved.count) of \(chosen.count) saved to \(exportDir.path)", saved.count == chosen.count ? "ok" : "warn")
         if r.deleteAfter ?? p.deleteAfterImport, !saved.isEmpty {
             try await deleteVerified(saved)
         }
@@ -453,26 +453,26 @@ final class Controller {
             guard let main = item.capture.main, let first = item.files.first,
                   let size = (try? FileManager.default.attributesOfItem(atPath: first.path)[.size] as? NSNumber)?.uint64Value,
                   size == main.size, item.files.allSatisfy({ FileManager.default.fileExists(atPath: $0.path) }) else {
-                log("Pas supprimé des lunettes (copie à vérifier) : \(item.capture.handle.prefix(8))", "warn")
+                log("Not deleted from the glasses (copy to check): \(item.capture.handle.prefix(8))", "warn")
                 continue
             }
             safe.append(item.capture)
         }
         guard !safe.isEmpty else { return }
-        setDetail("Reconnexion Bluetooth pour supprimer \(safe.count) éléments des lunettes…")
+        setDetail("Reconnecting over Bluetooth to delete \(safe.count) items from the glasses…")
         try await deleteHandles(safe.map(\.handle))
     }
 
     private func phase(from line: String) {
         let map: [(String, String)] = [
-            ("Asking the glasses for", "Les lunettes préparent les fichiers…"),
-            ("Asking the glasses to host", "Les lunettes créent leur réseau Wi-Fi…"),
-            ("The glasses host", "Le Mac rejoint le Wi-Fi des lunettes (pas d'internet pendant le transfert)…"),
-            ("joined", "Connexion sécurisée en Wi-Fi…"),
-            ("Connected over Wi-Fi", "Transfert en cours…"),
-            ("Receiving", "Transfert en cours…"),
-            ("The glasses went quiet", "Fin du transfert…"),
-            ("back on", "Retour sur ton Wi-Fi…"),
+            ("Asking the glasses for", "The glasses are getting the files ready…"),
+            ("Asking the glasses to host", "The glasses are starting their Wi-Fi network…"),
+            ("The glasses host", "The Mac is joining the glasses' Wi-Fi (no internet during the transfer)…"),
+            ("joined", "Securing the Wi-Fi link…"),
+            ("Connected over Wi-Fi", "Transferring…"),
+            ("Receiving", "Transferring…"),
+            ("The glasses went quiet", "Finishing the transfer…"),
+            ("back on", "Back to your Wi-Fi…"),
         ]
         if let hit = map.first(where: { line.hasPrefix($0.0) }) { setDetail(hit.1) }
         if line.contains("damaged") || line.contains("giving up") || line.contains("dropped") || line.contains("could not") { log(line, "warn") }
@@ -485,16 +485,16 @@ final class Controller {
         var ok = 0
         for (i, h) in handles.enumerated() {
             try Task.checkCancellation()
-            setDetail("Suppression sur les lunettes : \(i + 1) / \(handles.count)")
+            setDetail("Deleting from the glasses: \(i + 1) / \(handles.count)")
             if try await s.deleteCapture(h) {
                 ok += 1
                 try? FileManager.default.removeItem(at: previewsDir.appendingPathComponent("\(h).jpg"))
-                log("Supprimé des lunettes : \(h.prefix(8))", "ok")
+                log("Deleted from the glasses: \(h.prefix(8))", "ok")
             } else {
-                log("Les lunettes ont refusé de supprimer \(h.prefix(8))", "warn")
+                log("The glasses refused to delete \(h.prefix(8))", "warn")
             }
         }
-        log("\(ok) sur \(handles.count) supprimés des lunettes", ok == handles.count ? "ok" : "warn")
+        log("\(ok) of \(handles.count) deleted from the glasses", ok == handles.count ? "ok" : "warn")
         let list = try await s.listCaptures()
         lock.withLock { captures = list; capturesAt = Date() }
         pushState()
@@ -503,12 +503,12 @@ final class Controller {
     // MARK: Meta login and ownership
 
     func checkLogin() async throws {
-        guard let tokens = store.tokens() else { throw UIError("les jetons de l'app Meta manquent (tokens.json)") }
-        guard let frla = store.frla() else { throw UIError("pas de connexion Meta enregistrée") }
-        setDetail("Vérification auprès de Meta…")
+        guard let tokens = store.tokens() else { throw UIError("the Meta app tokens are missing (tokens.json)") }
+        guard let frla = store.frla() else { throw UIError("no saved Meta login") }
+        setDetail("Checking with Meta…")
         do {
             _ = try await MetaLogin.exchangeFrla(frla, tokens: tokens)
-            lock.withLock { loginCheck = (true, Date(), "Meta accepte la connexion") }
+            lock.withLock { loginCheck = (true, Date(), "Meta accepts the login") }
         } catch {
             lock.withLock { loginCheck = (false, Date(), "\(error)") }
             pushState()
@@ -518,8 +518,8 @@ final class Controller {
     }
 
     func pair() async throws {
-        guard let tokens = store.tokens() else { throw UIError("les jetons de l'app Meta manquent (tokens.json)") }
-        guard let frla = store.frla() else { throw UIError("pas de connexion Meta : voir la procédure dans l'onglet Compte") }
+        guard let tokens = store.tokens() else { throw UIError("the Meta app tokens are missing (tokens.json)") }
+        guard let frla = store.frla() else { throw UIError("no Meta login: see the Account tab") }
         // Informational only: LE finds the glasses by their identifier, classic pairing is not needed.
         let address = store.bundle()?.address ?? PairedGlasses.all().first?.address ?? ""
         disconnect()
@@ -527,7 +527,7 @@ final class Controller {
         setDetail("Connexion Meta…")
         let userToken = try await MetaLogin.exchangeFrla(frla, tokens: tokens)
         let backend = PairingBackend(userToken: userToken, tokens: tokens)
-        setDetail("Connexion Bluetooth (lunettes en mode appairage)…")
+        setDetail("Connecting over Bluetooth (glasses in pairing mode)…")
         let t = LeTransport(identifier: store.leIdentifier(), scanSeconds: 60)
         t.log = { [weak self] in self?.log($0, "debug") }
         let s = GlassesSession(transport: t, ownerKey: nil)
@@ -545,7 +545,7 @@ final class Controller {
         let serial = info["serial"] as? String ?? ""
         let userId = (info["user_id"] as? String) ?? (info["user_id"] as? NSNumber).map { "\($0)" } ?? ""
         try store.saveBundle(Store.Bundle(serial: serial, userId: userId, address: address, pairedAt: Date()))
-        log("Ce Mac est propriétaire des lunettes : série \(serial)", "ok")
+        log("This Mac owns the glasses: serial \(serial)", "ok")
         pushState()
     }
 }

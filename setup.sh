@@ -5,7 +5,7 @@
 #   ./setup.sh --relogin   log in to Meta again (the emulator step)
 #   ./setup.sh --repair    take ownership of the glasses again (after a reset, for example)
 #   ./setup.sh --cleanup   only remove the Android emulator and tools the login needed
-#   ./setup.sh --no-app    skip building Lunettes.app
+#   ./setup.sh --no-app    skip building Glasses.app
 #
 # Prefer a guided page in the browser? Double-click Install.command in the Finder instead: it runs this
 # same script and turns its questions into buttons.
@@ -17,7 +17,7 @@
 #   4. Meta login: downloads Java and the Android tools (no admin rights, no Homebrew), builds Visor with a
 #      two-line patch, runs it in an Android emulator, YOU log in there, and the login token comes back
 #   5. pairing: makes this Mac the owner of the glasses
-#   6. builds and opens Lunettes.app, the menu bar app with the web interface
+#   6. builds and opens Glasses.app, the menu bar app with the web interface
 #   7. offers to remove the emulator and the Android tools (several GB) once they are no longer needed
 #
 # Nothing is sent anywhere but Meta (the login, as the Meta AI app does), GitHub, Google and Adoptium
@@ -617,17 +617,17 @@ step_pair() {
 # ---------------------------------------------------------------- 6. the app
 
 step_app() {
-  step app "Lunettes.app, the interface"
+  step app "Glasses.app, the interface"
   if [ $NO_APP -eq 1 ]; then skip "Skipped (--no-app)"; return; fi
-  local app="$HOME/Applications/Lunettes.app"
-  if pgrep -x Lunettes > /dev/null 2>&1; then
-    pkill -x Lunettes; sleep 1
-    info "Lunettes was running: it restarts with the new build."
+  local app="$HOME/Applications/Glasses.app"
+  if pgrep -x Glasses > /dev/null 2>&1; then
+    pkill -x Glasses; sleep 1
+    info "Glasses was running: it restarts with the new build."
   fi
-  run "Building ~/Applications/Lunettes.app" "$ROOT/make-app.sh" || die "make-app.sh failed."
+  run "Building ~/Applications/Glasses.app" "$ROOT/make-app.sh" || die "make-app.sh failed."
   if [ $MACHINE -eq 1 ]; then
     # The setup page takes the person to the app itself: no second browser tab.
-    open -a "$app" --args --no-open && ok "Lunettes is running: look for the glasses icon in the menu bar."
+    open -a "$app" --args --no-open && ok "Glasses is running: look for the glasses icon in the menu bar."
   else
     open "$app" && ok "Opened: look for the glasses icon in the menu bar; the page opens in your browser."
   fi
@@ -694,7 +694,7 @@ if [ $MACHINE -eq 1 ]; then
   emit "done" "$EXPORTS"
 else
   printf '\n%s%sAll set.%s\n' "$B" "$G" "$N"
-  info "App:      Lunettes in the menu bar (~/Applications/Lunettes.app). Spotlight finds it as \"Lunettes\"."
+  info "App:      Glasses in the menu bar (~/Applications/Glasses.app). Spotlight finds it as \"Glasses\"."
   info "Exports:  $EXPORTS"
   info "Terminal: $CLI help"
   info "Log:      $LOG"

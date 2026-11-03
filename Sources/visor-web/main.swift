@@ -50,7 +50,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.server = server
         self.controller = controller
         self.routes = routes
-        controller.log("Interface prête sur \(url.absoluteString)")
+        controller.log("Ready on \(url.absoluteString)")
         setUpMenu()
         if !CommandLine.arguments.contains("--no-open") { NSWorkspace.shared.open(url) }
     }
@@ -65,7 +65,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if setup?.isRunning == true { _ = setup?.stop() }
     }
 
-    /// The guided setup page. Its own port, so Lunettes.app can start beside it at the end.
+    /// The guided setup page. Its own port, so Glasses.app can start beside it at the end.
     private func startSetup() {
         let server = HTTPServer(port: port)
         do {
@@ -96,14 +96,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setUpMenu() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = item.button {
-            button.image = NSImage(systemSymbolName: "eyeglasses", accessibilityDescription: "Lunettes")
+            button.image = NSImage(systemSymbolName: "eyeglasses", accessibilityDescription: "Glasses")
             if button.image == nil { button.title = "👓" }
         }
         let menu = NSMenu()
-        menu.addItem(withTitle: "Ouvrir l'interface", action: #selector(openUI), keyEquivalent: "o").target = self
-        menu.addItem(withTitle: "Ouvrir le dossier d'export", action: #selector(openFolder), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Open Glasses", action: #selector(openUI), keyEquivalent: "o").target = self
+        menu.addItem(withTitle: "Open the export folder", action: #selector(openFolder), keyEquivalent: "").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quitter Lunettes", action: #selector(quit), keyEquivalent: "q").target = self
+        menu.addItem(withTitle: "Quit Glasses", action: #selector(quit), keyEquivalent: "q").target = self
         item.menu = menu
         self.item = item
     }

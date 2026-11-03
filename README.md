@@ -13,8 +13,8 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
 
 ## What you get
 
-**Lunettes.app** is a menu bar app with a glasses icon and no Dock icon. It opens a page in your browser
-(`http://127.0.0.1:47392`). The interface is in French.
+**Glasses.app** is a menu bar app with a glasses icon and no Dock icon. It opens a page in your browser
+(`http://127.0.0.1:47392`).
 
 - **Gallery of the glasses**: thumbnails over Bluetooth, and a mark on each item that is already on the Mac.
 - **Import**: everything not yet on the Mac, the new items, everything, or a selection, with a progress bar and the
@@ -83,7 +83,7 @@ only stops for these things:
    Bluetooth, then click "Connect".
 5. **It offers to remove the emulator and the Android tools**, which you no longer need.
 
-When it finishes, **Lunettes** opens: look for the glasses icon in the menu bar. Spotlight finds it as "Lunettes".
+When it finishes, **Glasses** opens: look for the glasses icon in the menu bar. Spotlight finds it as "Glasses".
 On first launch macOS may ask for access to the export folder, and on the first connection it asks for Bluetooth.
 
 The setup is safe to run again, because every step checks first whether it is already done. On the guided page,
@@ -94,11 +94,11 @@ these options are under **More options**. In Terminal they are flags:
 | `--relogin` | Log in to Meta again. |
 | `--repair` | Take ownership again, for example after the glasses were reset. |
 | `--cleanup` | Only remove the Android emulator and tools. |
-| `--no-app` | Skip building Lunettes.app. |
+| `--no-app` | Skip building Glasses.app. |
 
 ## Using it
 
-Keep the glasses out of the case, with the arms open, near the Mac. In Lunettes, click **Connecter**: the
+Keep the glasses out of the case, with the arms open, near the Mac. In Glasses, click **Connect**: the
 connection uses Bluetooth LE and can take up to a minute.
 
 **During an import the Mac has no internet.** Over Bluetooth, the Mac asks the glasses to open a Wi-Fi network of
@@ -131,7 +131,7 @@ files are on the phone, not on the glasses, so this project cannot fetch them.
 | `~/Library/Application Support/visor-mac/` | The owner key (`owner_key.pem`), the Meta login (`meta_login.txt`), the app tokens (`tokens.json`), which glasses you own (`glasses.json`), and the preferences. Every file is `chmod 600`. |
 | `~/Library/Caches/visor-mac/` | Previews and thumbnails. Safe to delete. |
 | `~/Library/Logs/rayban-meta-mac/` | The setup logs. |
-| `~/Applications/Lunettes.app` | The app. `./make-app.sh` rebuilds it. |
+| `~/Applications/Glasses.app` | The app. `./make-app.sh` rebuilds it. |
 | `.work/` (in the repository) | The Visor source, the APK, and the build used for the login. Removed by the cleanup. |
 | `~/Library/Android/sdk`, `~/Library/Android/rayban-meta-mac-jdk21` | The Android tools and Java the login needs. An Android Studio SDK already there is reused, and is never removed. Removed by the cleanup otherwise. |
 | `~/.android/avd/visor_login.avd` | The emulator. Removed by the cleanup. |
@@ -171,7 +171,7 @@ token.
   your network in the menu bar.
 - **The Bluetooth or folder permission was denied.** Allow it again in System Settings > Privacy & Security >
   Bluetooth, or Files and Folders.
-- **Something else went wrong.** Lunettes has a **Journal** tab: tick "détails techniques" and copy it. For the
+- **Something else went wrong.** Glasses has a **Log** tab: tick "technical details" and copy it. For the
   setup, look at the log file it names.
 
 **Going back to the Meta AI app:** set the glasses up again in the Meta AI app, which takes ownership back. If the
@@ -223,7 +223,7 @@ Protocol traps carried over from Visor:
 ```sh
 swift build            # debug build of the CLI and the app
 swift test             # protocol tests (no hardware needed)
-./make-app.sh          # release build into ~/Applications/Lunettes.app
+./make-app.sh          # release build into ~/Applications/Glasses.app
 VISOR_WEB_DIR=$PWD/web .build/debug/visor-web    # run the app from the build, with live-reloaded web files
 .build/debug/visor-web --setup --repo $PWD         # the guided setup page (port 47393), driving ./setup.sh
 ```

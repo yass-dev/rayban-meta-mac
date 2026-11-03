@@ -5,10 +5,10 @@ import VisorKit
 func installAddOns(_ c: Controller, _ r: Routes) {
     var features: [String: AnyEncodable] = ["status": true, "shutter": true, "clock": true, "settings": false]
     c.setExtra("shutterActions", AnyEncodable([
-        ["action": AnyEncodable("photo"), "label": AnyEncodable("Prendre une photo"), "primary": AnyEncodable(true)],
-        ["action": AnyEncodable("video"), "label": AnyEncodable("Démarrer une vidéo")],
-        ["action": AnyEncodable("hyperlapse"), "label": AnyEncodable("Démarrer un hyperlapse")],
-        ["action": AnyEncodable("stop"), "label": AnyEncodable("Arrêter la vidéo")],
+        ["action": AnyEncodable("photo"), "label": AnyEncodable("Take a photo"), "primary": AnyEncodable(true)],
+        ["action": AnyEncodable("video"), "label": AnyEncodable("Start a video")],
+        ["action": AnyEncodable("hyperlapse"), "label": AnyEncodable("Start a hyperlapse")],
+        ["action": AnyEncodable("stop"), "label": AnyEncodable("Stop the video")],
     ]))
 
     func publish(_ s: GlassesStatus) {
@@ -19,28 +19,28 @@ func installAddOns(_ c: Controller, _ r: Routes) {
     // Each fresh session: follow the pushed state, and ask for a first snapshot.
     c.onSession.append { s in
         s.watchStatus { publish($0) }
-        do { publish(try await s.readStatus(timeout: 8)) } catch { c.log("État des lunettes non lu : \(error)", "debug") }
+        do { publish(try await s.readStatus(timeout: 8)) } catch { c.log("Glasses status not read: \(error)", "debug") }
     }
 
     r.extra["POST /api/status/read"] = { _ in
-        c.start("status", "Lecture de l'état des lunettes") {
+        c.start("status", "Reading the glasses status") {
             let s = try await c.ensureSession()
-            c.setDetail("Lecture de l'état…")
+            c.setDetail("Reading the status…")
             publish(try await s.readStatus())
         }
     }
     r.extra["POST /api/clock"] = { _ in
-        c.start("clock", "Mise à l'heure des lunettes") {
+        c.start("clock", "Setting the glasses clock") {
             let s = try await c.ensureSession()
             try await s.syncClock()
-            c.log("Heure envoyée aux lunettes (\(TimeZone.current.identifier))", "ok")
+            c.log("Time sent to the glasses (\(TimeZone.current.identifier))", "ok")
         }
     }
     r.extra["POST /api/shutter"] = { req in
         struct A: Decodable { let action: String }
-        guard let a = req.json(A.self) else { return .error(400, "action manquante") }
-        let labels = ["photo": "Photo", "video": "Démarrage d'une vidéo", "hyperlapse": "Démarrage d'un hyperlapse", "stop": "Arrêt de la vidéo"]
-        guard let label = labels[a.action] else { return .error(400, "action inconnue") }
+        guard let a = req.json(A.self) else { return .error(400, "missing action") }
+        let labels = ["photo": "Photo", "video": "Starting a video", "hyperlapse": "Starting a hyperlapse", "stop": "Stopping the video"]
+        guard let label = labels[a.action] else { return .error(400, "unknown action") }
         return c.start("shutter", label) {
             let s = try await c.ensureSession()
             switch a.action {
@@ -49,7 +49,7 @@ func installAddOns(_ c: Controller, _ r: Routes) {
             case "hyperlapse": try await s.startVideo(.hyperlapse)
             default: try await s.stopVideo()
             }
-            c.log("\(label) : les lunettes ont confirmé", "ok")
+            c.log("\(label): the glasses confirmed", "ok")
         }
     }
 
@@ -80,25 +80,25 @@ func installSettings(_ c: Controller, _ r: Routes, _ features: inout [String: An
 
     r.extra["GET /api/settings/catalog"] = { _ in .json(SettingsCatalog.all) }
     r.extra["POST /api/settings/read"] = { _ in
-        c.start("settings-read", "Lecture des réglages des lunettes") {
+        c.start("settings-read", "Reading the glasses settings") {
             let s = try await c.ensureSession()
-            c.setDetail("Lecture des réglages (quelques secondes en Bluetooth)…")
+            c.setDetail("Reading the settings (a few seconds over Bluetooth)…")
             let read = try await s.readSettings(deviceUuid: c.deviceUuid, timeout: 10)
             lock.withLock { values = read; readAt = Date() }
-            c.log("\(read.count) réglages lus", "ok")
+            c.log("\(read.count) settings read", "ok")
             publish()
         }
     }
     r.extra["POST /api/settings/write"] = { req in
         struct W: Decodable { let key: String; let value: SettingRaw }
-        guard let w = req.json(W.self) else { return .error(400, "réglage invalide") }
-        guard let d = SettingsCatalog.descriptor(w.key), d.writable else { return .error(400, "réglage inconnu ou en lecture seule") }
-        return c.start("settings-write", "Réglage « \(d.label) »") {
+        guard let w = req.json(W.self) else { return .error(400, "invalid setting") }
+        guard let d = SettingsCatalog.descriptor(w.key), d.writable else { return .error(400, "unknown or read-only setting") }
+        return c.start("settings-write", "Setting “\(d.label)”") {
             let s = try await c.ensureSession()
             do {
                 try await s.writeSetting(w.key, w.value, deviceUuid: c.deviceUuid, timeout: 10)
                 lock.withLock { values[w.key] = w.value }
-                c.log("« \(d.label) » = \(w.value)", "ok")
+                c.log("“\(d.label)” = \(w.value)", "ok")
             } catch {
                 publish()  // put the control back on the value the glasses hold
                 throw error

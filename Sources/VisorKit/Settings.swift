@@ -202,62 +202,62 @@ public enum SettingsCatalog {
     private static let assistant: [SettingDescriptor] = {
         let c = "Assistant"
         return [
-            toggle("assistant_enabled", "Meta AI", "Active ou désactive l'assistant Meta AI sur les lunettes.", c, w(2, .bool, "false", ind, parsed: true)),
-            toggle("wakeword_enabled", "« Hey Meta »", "Dites « Hey Meta » pour lancer une commande vocale.", c, w(36, .bool, "true", ind, parsed: true)),
-            toggle("wakeword_sound_enabled", "Son d'activation", "Les lunettes émettent un son après « Hey Meta ».", c, w(37, .bool, "true", ind, parsed: true)),
-            toggle("assistant_follow_up_enabled", "Répondre sans « Hey Meta »", "Le micro reste ouvert un court instant après une réponse pour une autre question.", c, w(52, .bool, "true", ind, parsed: true)),
-            toggle("natural_invocation_enabled", "Parler sans mot d'activation", "Permet de parler à l'assistant sans dire « Hey Meta » d'abord.", c, w(74, .bool, "false", ind, parsed: true)),
-            toggle("cloud_ai_understanding_enabled", "Photo pour Meta AI", "Quand vous parlez à Meta AI, une photo peut être prise pour répondre.", c, w(39, .bool, "true", ind, parsed: true)),
-            toggle("live_ai_enabled", "Live AI", "Active ou désactive Live AI.", c, w(93, .bool, "false", ind, parsed: true)),
-            toggle("detailed_responses_live_ai_enabled", "Réponses Live AI détaillées", "Live AI donne des réponses plus complètes.", c, w(154, .bool, "false", ind, parsed: true)),
-            toggle("live_ai_voice_only", "Live AI en vocal seulement", "Live AI répond à la voix, sans utiliser la caméra.", c, w(107, .bool, "false", ind, parsed: true)),
-            toggle("blv_scene_reader_enabled", "Descriptions détaillées", "Décrit davantage les objets, panneaux et personnes. Ne remplace pas une aide à la mobilité.", c, w(89, .bool, "false", ind, parsed: true)),
-            choice("tts_speak_speed", "Vitesse de la voix", "La vitesse à laquelle les lunettes parlent.", c, w(43, .int, "100", ind, parsed: true),
-                   [(75, "0,75×"), (100, "1× (normale)"), (125, "1,25×"), (150, "1,5×"), (175, "1,75×")]),
+            toggle("assistant_enabled", "Meta AI", "Turns the Meta AI assistant on or off on the glasses.", c, w(2, .bool, "false", ind, parsed: true)),
+            toggle("wakeword_enabled", "“Hey Meta”", "Say “Hey Meta” to start a voice command.", c, w(36, .bool, "true", ind, parsed: true)),
+            toggle("wakeword_sound_enabled", "Wake sound", "The glasses make a sound after “Hey Meta”.", c, w(37, .bool, "true", ind, parsed: true)),
+            toggle("assistant_follow_up_enabled", "Respond without “Hey Meta”", "The microphone stays on for a moment after an answer, for another question.", c, w(52, .bool, "true", ind, parsed: true)),
+            toggle("natural_invocation_enabled", "Talk without the wake phrase", "Lets you talk to the assistant without saying “Hey Meta” first.", c, w(74, .bool, "false", ind, parsed: true)),
+            toggle("cloud_ai_understanding_enabled", "Camera use", "When you talk to Meta AI, a photo may be taken to answer.", c, w(39, .bool, "true", ind, parsed: true)),
+            toggle("live_ai_enabled", "Live AI", "Turns Live AI on or off.", c, w(93, .bool, "false", ind, parsed: true)),
+            toggle("detailed_responses_live_ai_enabled", "Detailed Live AI answers", "Live AI gives fuller answers.", c, w(154, .bool, "false", ind, parsed: true)),
+            toggle("live_ai_voice_only", "Live AI voice only", "Live AI answers by voice, without using the camera.", c, w(107, .bool, "false", ind, parsed: true)),
+            toggle("blv_scene_reader_enabled", "Detailed descriptions", "Tells you more about objects, signs and people. Not a mobility aid.", c, w(89, .bool, "false", ind, parsed: true)),
+            choice("tts_speak_speed", "Speech speed", "How fast the glasses speak.", c, w(43, .int, "100", ind, parsed: true),
+                   [(75, "0.75×"), (100, "1× (normal)"), (125, "1.25×"), (150, "1.5×"), (175, "1.75×")]),
         ]
     }()
 
     private static let notifications: [SettingDescriptor] = {
         let c = "Notifications"
         return [
-            toggle("sg_do_not_disturb", "Ne pas déranger", "Coupe la sonnerie des appels sur les lunettes.", c, w(nil, .bool, "false", local, parsed: false)),
-            toggle("attention_deferral_user_enabled", "Moins d'interruptions", "Attend que vous ayez fini de parler pour lire une notification.", c, w(231, .bool, "false", ind, parsed: false)),
-            choice("notification_led_brightness", "Luminosité du voyant", "Luminosité du voyant de notification.", c, w(14, .int, "3", ind, parsed: true),
-                   [(1, "Automatique"), (2, "Faible"), (3, "Moyenne"), (4, "Élevée")]),
-            toggle("smart_reply_enabled", "Réponses suggérées", "Propose des réponses rapides selon la conversation.", c, w(165, .bool, "true", ind, parsed: false)),
-            toggle("user_setup_ica_toggle_enabled", "Annoncer les appels", "Les lunettes disent qui vous appelle.", c, w(176, .bool, "false", ind, parsed: true)),
-            choice("mute_announcements_default_duration", "Durée de pause des annonces", "Durée par défaut quand vous mettez les annonces en pause.", c, w(90, .int, "3600", ind, parsed: true),
-                   [(3600, "1 heure"), (7200, "2 heures"), (14400, "4 heures"), (28800, "8 heures")]),
-            toggle("enable_calendar_event_alert", "Alertes d'agenda", "Prévient des événements à venir de votre agenda.", c, w(133, .bool, "false", shared, parsed: true)),
-            toggle("enable_calendar_event_alert_announce_details", "Lire les détails des événements", "Lit à voix haute les détails de l'événement.", c, w(167, .bool, "false", ind, parsed: false)),
+            toggle("sg_do_not_disturb", "Do not disturb", "Silences call ringing on the glasses.", c, w(nil, .bool, "false", local, parsed: false)),
+            toggle("attention_deferral_user_enabled", "Reduce interruptions", "Waits until you stop speaking to read a notification.", c, w(231, .bool, "false", ind, parsed: false)),
+            choice("notification_led_brightness", "Notification light brightness", "Brightness of the notification light.", c, w(14, .int, "3", ind, parsed: true),
+                   [(1, "Automatic"), (2, "Low"), (3, "Medium"), (4, "High")]),
+            toggle("smart_reply_enabled", "Suggested replies", "Offers quick replies based on the conversation.", c, w(165, .bool, "true", ind, parsed: false)),
+            toggle("user_setup_ica_toggle_enabled", "Announce calls", "The glasses say who is calling.", c, w(176, .bool, "false", ind, parsed: true)),
+            choice("mute_announcements_default_duration", "Announcement pause length", "Default length when you pause announcements.", c, w(90, .int, "3600", ind, parsed: true),
+                   [(3600, "1 hour"), (7200, "2 hours"), (14400, "4 hours"), (28800, "8 hours")]),
+            toggle("enable_calendar_event_alert", "Calendar alerts", "Alerts you to upcoming calendar events.", c, w(133, .bool, "false", shared, parsed: true)),
+            toggle("enable_calendar_event_alert_announce_details", "Read event details", "Reads the event details out loud.", c, w(167, .bool, "false", ind, parsed: false)),
         ]
     }()
 
     private static let controls: [SettingDescriptor] = {
-        let c = "Commandes"
+        let c = "Controls"
         // Which physical control the "action button" is on Gen 2 is unconfirmed, so its mapping is shown, not changed.
         let actions: [(Int64, String)] = [
-            (1, "Aucune"), (2, "Meta AI"), (4, "Photo ou vidéo"), (5, "Appeler"), (6, "Requête Meta AI personnalisée"), (7, "Live AI"),
-            (11, "Capture automatique"), (13, "Traduction en direct"), (20, "Couper ou réactiver le micro"), (21, "Musique"),
+            (1, "None"), (2, "Meta AI"), (4, "Photo or video"), (5, "Call"), (6, "Custom Meta AI prompt"), (7, "Live AI"),
+            (11, "Auto capture"), (13, "Live translation"), (20, "Mute or unmute the microphone"), (21, "Music"),
         ]
         return [
-            choice("capture_button_short_long_press", "Bouton de capture", "Photo d'abord : un appui prend une photo, un appui long filme. Vidéo d'abord : l'inverse.", c,
-                   w(7, .int, "0", ind, parsed: true), [(0, "Photo d'abord"), (1, "Vidéo d'abord")]),
-            choice("capture_mode", "Autre mode de capture", "Le mode de capture supplémentaire proposé par le bouton.", c, w(105, .int, "3", ind, parsed: true),
-                   [(3, "Hyperlapse"), (6, "Ralenti"), (5, "Capture automatique")]),
-            choice("tap_and_hold_mapping", "Appui long sur le pavé tactile", "Ce que fait un appui prolongé sur la branche.", c, w(29, .int, "2", ind, parsed: true),
-                   [(1, "Rien"), (2, "Meta AI"), (3, "Spotify Tap"), (4, "Amazon Music"), (5, "Apple Music"), (7, "Mise au point sur la conversation"),
-                    (8, "Actions rapides"), (10, "Requête Meta AI personnalisée"), (11, "Live AI"), (12, "Be My Eyes"), (13, "Traduction en direct"), (19, "Musique")]),
-            choice("quick_actions", "Action rapide", "Ce que fait l'action rapide : un message, un message vocal ou un appel.", c, w(106, .str, "", ind, parsed: true),
-                   [("text", "Message"), ("voice", "Message vocal"), ("call", "Appel")]),
-            make("action_button_assistant_custom_prompt", "Requête personnalisée", "Le texte envoyé à Meta AI par le raccourci de requête personnalisée.", c,
+            choice("capture_button_short_long_press", "Capture button", "Photo first: a press takes a photo, a long press films. Video first: the other way round.", c,
+                   w(7, .int, "0", ind, parsed: true), [(0, "Photo first"), (1, "Video first")]),
+            choice("capture_mode", "Other capture mode", "The extra capture mode the button offers.", c, w(105, .int, "3", ind, parsed: true),
+                   [(3, "Hyperlapse"), (6, "Slow motion"), (5, "Auto capture")]),
+            choice("tap_and_hold_mapping", "Touchpad tap and hold", "What a tap and hold on the arm does.", c, w(29, .int, "2", ind, parsed: true),
+                   [(1, "Nothing"), (2, "Meta AI"), (3, "Spotify Tap"), (4, "Amazon Music"), (5, "Apple Music"), (7, "Conversation focus"),
+                    (8, "Quick actions"), (10, "Custom Meta AI prompt"), (11, "Live AI"), (12, "Be My Eyes"), (13, "Live translation"), (19, "Music")]),
+            choice("quick_actions", "Quick action", "What the quick action does: a message, a voice message or a call.", c, w(106, .str, "", ind, parsed: true),
+                   [("text", "Message"), ("voice", "Voice message"), ("call", "Call")]),
+            make("action_button_assistant_custom_prompt", "Custom prompt", "The text the custom prompt shortcut sends to Meta AI.", c,
                  kind: "string", w(110, .str, "what is the weather", ind, parsed: true), maxLength: 100, writable: true),
-            toggle("sg_captouch_invert_swipe_direction_horizontal", "Inverser le balayage avant/arrière", "Inverse le sens des balayages horizontaux sur le pavé tactile.", c, w(nil, .bool, "false", ind, parsed: false)),
-            toggle("sg_captouch_invert_swipe_direction_vertical", "Inverser le balayage haut/bas", "Inverse le sens des balayages verticaux sur le pavé tactile.", c, w(nil, .bool, "false", ind, parsed: false)),
-            toggle("spotify_tap_enabled", "Spotify Tap", "Un appui prolongé lance Spotify.", c, w(3, .bool, "false", ind, parsed: true)),
-            choice("assignable_action_button_short_press_mapping", "Bouton d'action (appui)", "Lecture seule : sur ce modèle, on ne sait pas quel bouton cela concerne.", c,
+            toggle("sg_captouch_invert_swipe_direction_horizontal", "Invert front/back swipes", "Reverses horizontal swipes on the touchpad.", c, w(nil, .bool, "false", ind, parsed: false)),
+            toggle("sg_captouch_invert_swipe_direction_vertical", "Invert up/down swipes", "Reverses vertical swipes on the touchpad.", c, w(nil, .bool, "false", ind, parsed: false)),
+            toggle("spotify_tap_enabled", "Spotify Tap", "A tap and hold plays Spotify.", c, w(3, .bool, "false", ind, parsed: true)),
+            choice("assignable_action_button_short_press_mapping", "Action button (press)", "Read-only: which button this is on this model is not known.", c,
                    w(101, .int, "4", ind, parsed: true), actions, writable: false),
-            choice("assignable_action_button_long_press_mapping", "Bouton d'action (appui long)", "Lecture seule : sur ce modèle, on ne sait pas quel bouton cela concerne.", c,
+            choice("assignable_action_button_long_press_mapping", "Action button (long press)", "Read-only: which button this is on this model is not known.", c,
                    w(102, .int, "0", ind, parsed: true), actions, writable: false),
         ]
     }()
@@ -265,64 +265,64 @@ public enum SettingsCatalog {
     private static let audio: [SettingDescriptor] = {
         let c = "Audio"
         return [
-            make("notification_volume", "Volume des notifications", "Niveau des sons de notification.", c, kind: "int", w(5, .int, "90", ind, parsed: true),
+            make("notification_volume", "Notification volume", "Level of the notification sounds.", c, kind: "int", w(5, .int, "90", ind, parsed: true),
                  min: 55, max: 127, step: 1, unit: "", writable: true),
-            make("audio_balance", "Balance gauche/droite", "Répartition du son entre les haut-parleurs gauche (-1) et droit (1).", c, kind: "double",
+            make("audio_balance", "Left/right balance", "Balance between the left (-1) and right (1) speakers.", c, kind: "double",
                  w(225, .float, "0.0", ind, parsed: true), min: -1, max: 1, step: 0.2, unit: "", writable: true),
-            toggle("avc_enabled", "Volume adaptatif", "Ajuste le volume selon le bruit ambiant.", c, w(80, .bool, "false", ind, parsed: true)),
-            toggle("mono_audio_enabled", "Audio mono", "Le même son dans les deux haut-parleurs.", c, w(228, .bool, "false", ind, parsed: true)),
-            choice("spatial_media_enabled", "Son spatial", "Musique et vidéos en stéréo ou en son immersif.", c, w(158, .int, "0", ind, parsed: true),
-                   [(0, "Stéréo"), (1, "Spatial")]),
-            toggle("leak_crusher_enabled", "Audio discret", "Limite le son entendu par les personnes autour de vous.", c, w(160, .bool, "false", ind, parsed: true)),
-            choice("leak_crusher_intensity", "Niveau d'audio discret", "Plus le niveau est haut, moins le son s'entend autour de vous.", c, w(161, .int, "2", ind, parsed: true),
+            toggle("avc_enabled", "Adaptive volume", "Adjusts the volume to the noise around you.", c, w(80, .bool, "false", ind, parsed: true)),
+            toggle("mono_audio_enabled", "Mono audio", "The same sound in both speakers.", c, w(228, .bool, "false", ind, parsed: true)),
+            choice("spatial_media_enabled", "Spatial audio", "Music and videos in stereo or spatial audio.", c, w(158, .int, "0", ind, parsed: true),
+                   [(0, "Stereo"), (1, "Spatial")]),
+            toggle("leak_crusher_enabled", "Discreet audio", "Limits how much people around you hear.", c, w(160, .bool, "false", ind, parsed: true)),
+            choice("leak_crusher_intensity", "Discreet audio level", "The higher the level, the less people around you hear.", c, w(161, .int, "2", ind, parsed: true),
                    [(0, "1"), (1, "2"), (2, "3"), (3, "4"), (4, "5")]),
-            toggle("sg_headphone_mode_enabled", "Mode casque", "Passe le son des lunettes en mode casque.", c, w(nil, .bool, "false", ind, parsed: false)),
-            toggle("auto_play_pause_on_don_doff", "Pause quand on retire les lunettes", "Met la musique en pause quand vous enlevez les lunettes.", c, w(6, .bool, "true", ind, parsed: true)),
+            toggle("sg_headphone_mode_enabled", "Headphone mode", "Switches the glasses audio to headphone mode.", c, w(nil, .bool, "false", ind, parsed: false)),
+            toggle("auto_play_pause_on_don_doff", "Pause when the glasses come off", "Pauses music when you take the glasses off.", c, w(6, .bool, "true", ind, parsed: true)),
         ]
     }()
 
     private static let camera: [SettingDescriptor] = {
-        let c = "Caméra"
+        let c = "Camera"
         return [
-            choice("resolution_and_framerate", "Résolution vidéo", "Plus de qualité réduit l'autonomie, l'espace libre et la durée d'enregistrement.", c,
-                   w(109, .int, "0", ind, parsed: true), [(0, "Standard (1080p, 30 i/s)"), (2, "Fluide (1080p, 60 i/s)"), (1, "Haute résolution (3K, 30 i/s)")]),
-            choice("video_duration_ms", "Durée maximale des vidéos", "5 minutes seulement en résolution standard.", c, w(17, .int, "180000", ind, parsed: true),
-                   [(30000, "30 secondes"), (60000, "1 minute"), (180000, "3 minutes"), (300000, "5 minutes"), (600000, "10 minutes")]),
-            choice("eis_mode", "Stabilisation vidéo", "Le niveau de stabilisation des vidéos.", c, w(108, .int, "2", ind, parsed: true),
-                   [(0, "Automatique"), (1, "Forte"), (2, "Moyenne"), (3, "Faible")]),
-            choice("capture_aspect_ratio", "Orientation des photos et vidéos", "Portrait (3:4) ou paysage (4:3).", c, w(252, .int, "0", ind, parsed: false),
-                   [(0, "Portrait"), (1, "Paysage")]),
-            toggle("quick_clips_photo_capture_enabled", "Photo dynamique", "Prend plusieurs images à chaque photo pour choisir la meilleure.", c, w(100, .bool, "false", ind, parsed: true)),
-            toggle("media_auto_leveling_enabled", "Mise à niveau automatique", "Redresse automatiquement les photos et vidéos.", c, w(151, .bool, "false", ind, parsed: false)),
-            toggle("media_occlusion_removal_enabled", "Recadrage des obstacles", "Recadre quand une casquette ou des cheveux cachent une partie de l'image.", c, w(152, .bool, "false", ind, parsed: false)),
-            toggle("music_concurrency_enabled", "Musique pendant l'enregistrement", "La musique continue pendant une vidéo et peut être enregistrée.", c, w(183, .bool, "false", ind, parsed: true)),
-            toggle("motion_blur_reduction_enabled", "Réduction du flou de mouvement", "Réduit le flou dans les vidéos.", c, w(220, .bool, "true", ind, parsed: true)),
-            toggle("occlusion_detection_enabled", "Détection d'objectif masqué", "Prévient quand quelque chose cache la caméra.", c, w(12, .bool, "true", ind, parsed: true)),
+            choice("resolution_and_framerate", "Video resolution", "More quality means less battery life, free space and recording time.", c,
+                   w(109, .int, "0", ind, parsed: true), [(0, "Standard (1080p, 30 fps)"), (2, "Smooth (1080p, 60 fps)"), (1, "High resolution (3K, 30 fps)")]),
+            choice("video_duration_ms", "Maximum video length", "5 minutes in standard resolution only.", c, w(17, .int, "180000", ind, parsed: true),
+                   [(30000, "30 seconds"), (60000, "1 minute"), (180000, "3 minutes"), (300000, "5 minutes"), (600000, "10 minutes")]),
+            choice("eis_mode", "Video stabilization", "How much videos are stabilized.", c, w(108, .int, "2", ind, parsed: true),
+                   [(0, "Automatic"), (1, "High"), (2, "Medium"), (3, "Low")]),
+            choice("capture_aspect_ratio", "Photo and video orientation", "Portrait (3:4) or landscape (4:3).", c, w(252, .int, "0", ind, parsed: false),
+                   [(0, "Portrait"), (1, "Landscape")]),
+            toggle("quick_clips_photo_capture_enabled", "Dynamic photo", "Takes several frames with each photo so you can pick the best.", c, w(100, .bool, "false", ind, parsed: true)),
+            toggle("media_auto_leveling_enabled", "Auto level", "Straightens photos and videos automatically.", c, w(151, .bool, "false", ind, parsed: false)),
+            toggle("media_occlusion_removal_enabled", "Crop obstructions", "Crops when a cap brim or hair hides part of the picture.", c, w(152, .bool, "false", ind, parsed: false)),
+            toggle("music_concurrency_enabled", "Music while recording", "Music keeps playing during a video and may be recorded.", c, w(183, .bool, "false", ind, parsed: true)),
+            toggle("motion_blur_reduction_enabled", "Motion blur reduction", "Reduces blur in videos.", c, w(220, .bool, "true", ind, parsed: true)),
+            toggle("occlusion_detection_enabled", "Blocked lens detection", "Warns you when something covers the camera.", c, w(12, .bool, "true", ind, parsed: true)),
         ]
     }()
 
     private static let privacy: [SettingDescriptor] = {
-        let c = "Confidentialité"
-        let readOnly = "Lecture seule ici : ce réglage touche au déverrouillage ou à la sécurité."
+        let c = "Privacy"
+        let readOnly = "Read-only here: this setting affects unlocking or security."
         return [
-            toggle("location_global_enabled", "Localisation", "Autorise la localisation pour les lunettes.", c, w(15, .bool, "false", ind, parsed: false)),
-            toggle("location_chatbot_enabled", "Localisation pour Meta AI", "Meta AI peut utiliser la position du téléphone pour répondre.", c, w(35, .bool, "false", ind, parsed: false)),
-            toggle("assistant_store_voice_recordings", "Conserver les enregistrements vocaux", "Meta garde l'audio de ce que vous dites à Meta AI.", c, w(10, .bool, "true", ind, parsed: true)),
-            toggle("assistant_store_voice_transcripts", "Conserver les transcriptions", "Meta garde le texte de ce que vous dites à Meta AI.", c, w(9, .bool, "true", ind, parsed: true)),
-            toggle("cloud_media_processing_enabled", "Traitement des médias dans le cloud", "Vos photos et vidéos peuvent être envoyées au cloud de Meta pour être traitées.", c, w(56, .bool, "false", shared, parsed: true)),
-            toggle("device_share_additional_data_enabled", "Partager des données supplémentaires", "Envoie à Meta plus de données d'utilisation que le strict nécessaire.", c, w(79, .bool, "false", ind, parsed: true)),
-            toggle("media_cloud_enabled", "Fonctions cloud pour les médias", "Lecture seule : effet mal connu.", c, w(32, .bool, "false", ind, parsed: false), writable: false),
-            toggle("passive_visual_capture_enabled", "Capture visuelle passive", "Lecture seule : effet mal connu.", c, w(187, .bool, "true", ind, parsed: true), writable: false),
-            toggle("passive_phone_unlock_enabled", "Déverrouillage passif du téléphone", readOnly, c, w(51, .bool, "false", ind, parsed: true), writable: false),
-            toggle("verified_session_enabled", "Sessions vérifiées", readOnly, c, w(8, .bool, "false", ind, parsed: true), writable: false),
+            toggle("location_global_enabled", "Location", "Allows location for the glasses.", c, w(15, .bool, "false", ind, parsed: false)),
+            toggle("location_chatbot_enabled", "Location for Meta AI", "Meta AI may use the phone's location to answer.", c, w(35, .bool, "false", ind, parsed: false)),
+            toggle("assistant_store_voice_recordings", "Store voice recordings", "Meta keeps the audio of what you say to Meta AI.", c, w(10, .bool, "true", ind, parsed: true)),
+            toggle("assistant_store_voice_transcripts", "Store transcripts", "Meta keeps the text of what you say to Meta AI.", c, w(9, .bool, "true", ind, parsed: true)),
+            toggle("cloud_media_processing_enabled", "Cloud media processing", "Your photos and videos may be sent to Meta's cloud for processing.", c, w(56, .bool, "false", shared, parsed: true)),
+            toggle("device_share_additional_data_enabled", "Share additional data", "Sends Meta more usage data than it strictly needs.", c, w(79, .bool, "false", ind, parsed: true)),
+            toggle("media_cloud_enabled", "Cloud features for media", "Read-only: what it does is not well known.", c, w(32, .bool, "false", ind, parsed: false), writable: false),
+            toggle("passive_visual_capture_enabled", "Passive visual capture", "Read-only: what it does is not well known.", c, w(187, .bool, "true", ind, parsed: true), writable: false),
+            toggle("passive_phone_unlock_enabled", "Passive phone unlock", readOnly, c, w(51, .bool, "false", ind, parsed: true), writable: false),
+            toggle("verified_session_enabled", "Verified sessions", readOnly, c, w(8, .bool, "false", ind, parsed: true), writable: false),
         ]
     }()
 
     private static let system: [SettingDescriptor] = {
-        let c = "Système"
+        let c = "System"
         return [
-            toggle("wear_detection_enabled", "Détection du port", "Met les fonctions en pause quand vous retirez les lunettes.", c, w(38, .bool, "true", ind, parsed: true)),
-            toggle("cloud_ota_enabled", "Mises à jour automatiques", "Lecture seule : les mises à jour du logiciel ne se changent pas ici.", c, w(19, .bool, "false", shared, parsed: true), writable: false),
+            toggle("wear_detection_enabled", "Wear detection", "Pauses features when you take the glasses off.", c, w(38, .bool, "true", ind, parsed: true)),
+            toggle("cloud_ota_enabled", "Automatic updates", "Read-only: software updates are not changed here.", c, w(19, .bool, "false", shared, parsed: true), writable: false),
         ]
     }()
 }

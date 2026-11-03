@@ -4,8 +4,6 @@ body { font-size: 15px; }
 .setup-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 .setup-top .logo { width: 46px; height: 46px; }
 .setup-top h1 { font-size: 22px; margin: 0; }
-.lang { display: flex; gap: 4px; }
-.lang .on { background: var(--info-bg); color: var(--accent); border-color: var(--accent); }
 .hero { padding: 22px; }
 .hero h2 { margin: 0 0 8px; font-size: 19px; }
 .lead { font-size: 16px; margin: 0 0 14px; }

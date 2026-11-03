@@ -56,7 +56,7 @@ final class SetupRunner {
 
     static let allSteps: [(String, String)] = [
         ("mac", "Checking this Mac"), ("build", "Building the Mac client"), ("tokens", "Meta app tokens"),
-        ("login", "Meta login"), ("pair", "Pairing"), ("app", "Lunettes.app"), ("cleanup", "Cleaning up"),
+        ("login", "Meta login"), ("pair", "Pairing"), ("app", "Glasses.app"), ("cleanup", "Cleaning up"),
     ]
 
     let repo: URL
@@ -91,7 +91,7 @@ final class SetupRunner {
         var serial: String?
         if let data = try? Data(contentsOf: store.appendingPathComponent("glasses.json")),
            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] { serial = json["serial"] as? String }
-        let app = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Applications/Lunettes.app")
+        let app = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Applications/Glasses.app")
         return Existing(tokens: has("tokens.json"), login: has("meta_login.txt"), paired: has("glasses.json") && has("owner_key.pem"),
                         app: FileManager.default.fileExists(atPath: app.path), serial: serial)
     }
@@ -340,7 +340,7 @@ final class SetupRunner {
     }
 }
 
-/// The setup page's HTTP API, on its own port so that it can run beside Lunettes.app.
+/// The setup page's HTTP API, on its own port so that it can run beside Glasses.app.
 final class SetupRoutes {
     let runner: SetupRunner
     let port: UInt16
@@ -358,7 +358,7 @@ final class SetupRoutes {
         switch (r.method, r.path) {
         case ("GET", "/"), ("GET", "/setup.html"):
             var resp = file("setup.html")
-            // The page checks that Lunettes answers on its own port before sending the person there.
+            // The page checks that Glasses answers on its own port before sending the person there.
             resp.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' http://127.0.0.1:\(SetupRoutes.appPort); frame-ancestors 'none'"
             return resp
         case ("GET", "/setup.js"), ("GET", "/app.css"), ("GET", "/setup.css"), ("GET", "/icon.svg"):
@@ -377,8 +377,8 @@ final class SetupRoutes {
             if let path = runner.state().logPath { DispatchQueue.main.async { NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)]) } }
             return .ok()
         case ("POST", "/api/setup/open-app"):
-            let app = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Applications/Lunettes.app")
-            guard FileManager.default.fileExists(atPath: app.path) else { return .error(404, "Lunettes.app is not installed") }
+            let app = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Applications/Glasses.app")
+            guard FileManager.default.fileExists(atPath: app.path) else { return .error(404, "Glasses.app is not installed") }
             let config = NSWorkspace.OpenConfiguration()
             config.arguments = ["--no-open"]
             DispatchQueue.main.async { NSWorkspace.shared.openApplication(at: app, configuration: config) }

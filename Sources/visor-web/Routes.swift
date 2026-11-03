@@ -39,35 +39,35 @@ final class Routes {
         case ("GET", "/api/logs"): return .json(c.logsSnapshot())
 
         case ("POST", "/api/connect"):
-            return c.start("connect", "Connexion aux lunettes") { [c] in try await c.refresh(previews: c.prefs.autoPreviews) }
+            return c.start("connect", "Connecting to the glasses") { [c] in try await c.refresh(previews: c.prefs.autoPreviews) }
         case ("POST", "/api/disconnect"):
-            if c.isBusy { return .error(409, "Une opération est en cours : annule-la d'abord") }
+            if c.isBusy { return .error(409, "Something is running: cancel it first") }
             c.disconnect(); return .ok()
         case ("POST", "/api/refresh"):
-            return c.start("refresh", "Actualisation de la galerie") { [c] in try await c.refresh(previews: c.prefs.autoPreviews) }
+            return c.start("refresh", "Refreshing the gallery") { [c] in try await c.refresh(previews: c.prefs.autoPreviews) }
         case ("POST", "/api/previews"):
-            return c.start("previews", "Aperçus des lunettes") { [c] in try await c.refresh(previews: true) }
+            return c.start("previews", "Loading the previews") { [c] in try await c.refresh(previews: true) }
         case ("POST", "/api/cancel"): return c.cancel()
 
         case ("POST", "/api/import"):
-            guard let body = r.json(Controller.ImportRequest.self) else { return .error(400, "requête invalide") }
-            let label = ["new": "Import des nouveautés", "all": "Import de tout", "selected": "Import de la sélection"][body.mode] ?? "Import de ce qui manque sur le Mac"
+            guard let body = r.json(Controller.ImportRequest.self) else { return .error(400, "invalid request") }
+            let label = ["new": "Importing what is new", "all": "Importing everything", "selected": "Importing the selection"][body.mode] ?? "Importing what is missing on the Mac"
             return c.start("import", label) { [c] in try await c.importMedia(body) }
 
         case ("POST", "/api/delete"):
             struct D: Decodable { let handles: [String]; let confirm: Bool }
-            guard let body = r.json(D.self), body.confirm, !body.handles.isEmpty else { return .error(400, "confirmation manquante") }
-            return c.start("delete", "Suppression sur les lunettes") { [c] in try await c.deleteHandles(body.handles) }
+            guard let body = r.json(D.self), body.confirm, !body.handles.isEmpty else { return .error(400, "missing confirmation") }
+            return c.start("delete", "Deleting from the glasses") { [c] in try await c.deleteHandles(body.handles) }
 
         case ("POST", "/api/check-login"):
-            return c.start("login", "Vérification de la connexion Meta") { [c] in try await c.checkLogin() }
+            return c.start("login", "Checking the Meta login") { [c] in try await c.checkLogin() }
         case ("POST", "/api/pair"):
             struct P: Decodable { let confirm: String }
-            guard r.json(P.self)?.confirm == "APPAIRER" else { return .error(400, "tape APPAIRER pour confirmer") }
-            return c.start("pair", "Appairage (prise de propriété)", cancellable: false) { [c] in try await c.pair() }
+            guard r.json(P.self)?.confirm == "PAIR" else { return .error(400, "type PAIR to confirm") }
+            return c.start("pair", "Pairing (taking ownership)", cancellable: false) { [c] in try await c.pair() }
 
         case ("POST", "/api/prefs"):
-            guard let p = r.json(WebPrefs.self) else { return .error(400, "préférences invalides") }
+            guard let p = r.json(WebPrefs.self) else { return .error(400, "invalid preferences") }
             c.setPrefs(p); return .ok()
 
         case ("GET", _) where r.path.hasPrefix("/api/preview/"):
@@ -93,10 +93,10 @@ final class Routes {
             return resp
         case ("POST", "/api/library/trash"):
             struct T: Decodable { let names: [String] }
-            guard let body = r.json(T.self) else { return .error(400, "requête invalide") }
+            guard let body = r.json(T.self) else { return .error(400, "invalid request") }
             var moved = 0
             for n in body.names { if let url = libraryFile(n), (try? FileManager.default.trashItem(at: url, resultingItemURL: nil)) != nil { moved += 1 } }
-            c.log("\(moved) fichier(s) mis à la corbeille du Mac", "ok")
+            c.log("\(moved) file(s) moved to the Mac's Trash", "ok")
             c.pushState()
             return .ok("\(moved)")
         case ("POST", "/api/library/reveal"):
