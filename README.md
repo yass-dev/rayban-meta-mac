@@ -1,11 +1,21 @@
 # rayban-meta-mac
 
-Get the photos and videos off your Ray-Ban Meta glasses and onto your Mac at full quality, straight from the
-glasses, with no phone involved. You can also run the glasses from the Mac: battery and status, remote shutter,
-settings.
+**Import the photos and videos from your Ray-Ban Meta smart glasses to your Mac, at full quality, without a
+phone.** This is an unofficial, open-source macOS app, with a menu bar app and a command line tool. It also shows
+the battery and status of the glasses, works as a remote shutter, and changes their settings.
+
+Normally the glasses hand their photos and videos only to the Meta AI app (formerly Meta View) on your phone. Here
+the Mac fetches them itself. It lists them over Bluetooth, then copies the original HEVC videos and HEIC photos
+over the glasses' own Wi-Fi, at 7 to 8 MB/s.
 
 It is built on the protocol that [Visor](https://github.com/macedonga/visor) reverse engineered and documented on its
 [wiki](https://github.com/macedonga/visor/wiki). It is written in Swift and has no dependencies.
+
+**New to this?** Follow the [step-by-step install](#step-by-step-without-terminal): no Terminal, only clicks.
+
+![The Glasses app on a Mac, listing the photos and videos on a pair of Ray-Ban Meta glasses and marking which ones are already on the Mac](docs/screenshots/gallery.png)
+
+<sub>The screenshots use sample data.</sub>
 
 > **Unofficial.** This project is not affiliated with Meta or EssilorLuxottica. It talks to the glasses the way the
 > Meta AI app does, which may be against Meta's terms of use. Setting it up makes your Mac the **owner** of the
@@ -30,6 +40,19 @@ It is built on the protocol that [Visor](https://github.com/macedonga/visor) rev
 - **Account**: check the Meta login, pair again, and a live log.
 
 **`visor-mac`** is the same feature set from the terminal: `status`, `list`, `import`, `delete`, and the rest.
+
+<table>
+  <tr>
+    <td width="33%"><img src="docs/screenshots/import.png" alt="Home tab during an import from Ray-Ban Meta glasses: progress bar, transfer speed, battery and status"></td>
+    <td width="33%"><img src="docs/screenshots/control.png" alt="Control and status tab: remote shutter buttons, clock sync, and the detailed status of the glasses"></td>
+    <td width="33%"><img src="docs/screenshots/settings.png" alt="Settings tab: Meta AI and Hey Meta settings of the glasses, as switches"></td>
+  </tr>
+  <tr>
+    <td align="center">Import, with its speed</td>
+    <td align="center">Remote shutter and status</td>
+    <td align="center">Settings of the glasses</td>
+  </tr>
+</table>
 
 ## Requirements
 
@@ -252,6 +275,33 @@ app does not find them, reset the glasses first; see Meta's support pages for th
 | Live stream, assistant, video stabilisation | Not ported |
 
 Other Meta glasses (Oakley Meta, Gen 1) speak the same protocol according to Visor, but are untested here.
+
+## FAQ
+
+**Can I get photos and videos off Ray-Ban Meta glasses without the Meta AI app?**
+Yes. Once the setup is done, the Mac lists and imports them straight from the glasses, with no phone and no Meta
+server involved. The setup needs your Meta account once, to pair the glasses (see
+[How the login works](#how-the-login-works)).
+
+**Are the files in their original quality?**
+Yes. You get the files as the glasses stored them, HEVC videos and HEIC photos, and each one is checked against the
+glasses' checksum when it arrives.
+
+**Can I keep using the Meta AI app on my phone?**
+Not at the same time. The glasses accept one owner, and after the setup it is the Mac. Setting the glasses up again
+in the Meta AI app takes them back.
+
+**Which glasses work?**
+Ray-Ban Meta Gen 2 is tested. According to Visor, Ray-Ban Meta Gen 1 and Oakley Meta speak the same protocol, but
+they are untested here. If you try one, please report how it went in an issue.
+
+**Does it work on Windows, Linux or Android?**
+No, it is for macOS 13 or later. On Android, there is [Visor](https://github.com/macedonga/visor), the app this
+project is based on.
+
+**Does anything leave my Mac?**
+Your photos and videos never do. Meta's servers are contacted only for the login and the pairing during the setup,
+and when you click **Check with Meta**.
 
 ## How it works
 
