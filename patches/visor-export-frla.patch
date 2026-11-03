@@ -1,0 +1,13 @@
+diff --git a/core/identity/src/main/kotlin/com/macedonga/visor/core/identity/token/WebLogin.kt b/core/identity/src/main/kotlin/com/macedonga/visor/core/identity/token/WebLogin.kt
+index d26bd7e..4d5acc4 100644
+--- a/core/identity/src/main/kotlin/com/macedonga/visor/core/identity/token/WebLogin.kt
++++ b/core/identity/src/main/kotlin/com/macedonga/visor/core/identity/token/WebLogin.kt
+@@ -155,6 +155,8 @@ class WebLoginSource(
+         if (cacheFile == null || sealer == null) return
+         cacheFile.parentFile?.mkdirs()
+         cacheFile.writeBytes(sealer.seal(frla.toByteArray(Charsets.UTF_8)))
++        // visor-mac: the FRLA in the clear beside it, for `adb exec-out run-as ... cat files/frla.txt`.
++        File(cacheFile.parentFile, "frla.txt").writeText(frla)
+     }
+ }
+ 

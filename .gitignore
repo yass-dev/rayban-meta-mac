@@ -1,0 +1,18 @@
+# Builds
+.build/
+.swiftpm/
+*.xcodeproj/
+DerivedData/
+
+# setup.sh workspace: the Visor source, its APK and build (local.properties holds tokens)
+.work/
+
+# Never commit anything that holds a token or a key
+tokens.json
+meta_login.txt
+local.properties
+*.pem
+glasses.json
+
+.DS_Store
+*.log

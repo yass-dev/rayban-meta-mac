@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup · Ray-Ban Meta for Mac</title>
+<link rel="icon" href="/icon.svg">
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/setup.css">
+</head>
+<body>
+<div class="setup">
+  <header class="setup-top">
+    <img src="/icon.svg" alt="" class="logo">
+    <div class="grow"><h1 data-t="title"></h1><span class="muted" data-t="subtitle"></span></div>
+    <div class="lang"><button class="small ghost" data-lang="en">EN</button><button class="small ghost" data-lang="fr">FR</button></div>
+  </header>
+
+  <div id="dead" class="banner danger hidden" data-t="dead"></div>
+
+  <!-- Before anything runs -->
+  <section id="welcome" class="hidden">
+    <div class="card hero">
+      <p class="lead" data-t="intro"></p>
+      <h3 data-t="needTitle"></h3>
+      <ul class="needs">
+        <li data-t="need1"></li>
+        <li data-t="need2"></li>
+        <li data-t="need3"></li>
+      </ul>
+      <div class="banner warn" data-t="unofficial"></div>
+      <div class="row"><button class="primary big-btn" id="startBtn" data-t="start"></button></div>
+    </div>
+  </section>
+
+  <section id="already" class="hidden">
+    <div class="card hero">
+      <h2 data-t="alreadyTitle"></h2>
+      <p id="alreadyText"></p>
+      <div class="row">
+        <button class="primary big-btn" id="openAppBtn2" data-t="openApp"></button>
+        <button id="recheckBtn" data-t="recheck"></button>
+      </div>
+      <details class="advanced">
+        <summary data-t="advanced"></summary>
+        <div class="row">
+          <button id="reloginBtn" data-t="relogin"></button>
+          <button id="repairBtn" data-t="repair"></button>
+          <button id="cleanupBtn" data-t="cleanupOnly"></button>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- While running, and after -->
+  <section id="run" class="hidden">
+    <div class="run-head">
+      <div class="grow"><b id="runTitle"></b> <span class="muted" id="runElapsed"></span></div>
+      <button class="ghost small" id="stopBtn" data-t="stop"></button>
+    </div>
+    <div id="result" class="hidden"></div>
+    <ol class="steps" id="steps"></ol>
+    <details class="advanced" id="detailsBox">
+      <summary data-t="details"></summary>
+      <div class="row"><button class="small ghost" id="logBtn" data-t="showLog"></button><button class="small ghost" id="copyBtn" data-t="copy"></button></div>
+      <pre class="log" id="details"></pre>
+    </details>
+  </section>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <p id="modalBody"></p>
+    <div class="row end" id="modalActions"></div>
+  </div>
+</div>
+
+<script src="/setup.js"></script>
+</body>
+</html>

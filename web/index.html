@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lunettes</title>
+<link rel="icon" href="/icon.svg">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><img src="/icon.svg" alt=""><div><strong>Lunettes</strong><span id="brandSub">Ray-Ban Meta</span></div></div>
+    <nav id="nav">
+      <a data-tab="home" class="on"><span class="ic">◎</span>Accueil</a>
+      <a data-tab="glasses"><span class="ic">▦</span>Galerie des lunettes <em id="navGlasses"></em></a>
+      <a data-tab="mac"><span class="ic">▤</span>Sur le Mac <em id="navMac"></em></a>
+      <a data-tab="control"><span class="ic">◉</span>Contrôle et état</a>
+      <a data-tab="settings"><span class="ic">⚙</span>Réglages</a>
+      <a data-tab="account"><span class="ic">⚿</span>Compte et appairage</a>
+      <a data-tab="log"><span class="ic">≡</span>Journal</a>
+    </nav>
+    <div class="side-foot">
+      <button class="ghost small" id="quitBtn" title="Arrête l'application (l'icône de la barre des menus disparaît)">Quitter l'application</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="top">
+      <div class="conn" id="conn"><span class="dot"></span><span id="connText">Déconnecté</span></div>
+      <div class="top-actions">
+        <button id="connectBtn" class="primary">Connecter</button>
+        <button id="refreshBtn">Actualiser</button>
+        <button id="disconnectBtn" class="ghost">Déconnecter</button>
+      </div>
+    </header>
+
+    <div id="perm" class="banner warn hidden"><b>macOS attend ton autorisation.</b> Une fenêtre demande si « Lunettes » peut accéder au dossier Documents (là où vont les exports) : clique « Autoriser ». À la première connexion, une autre fenêtre demandera le Bluetooth.</div>
+    <div id="dead" class="banner danger hidden">L'application ne répond plus. Relance « Lunettes » depuis le Finder, puis recharge cette page.</div>
+    <div id="offline" class="banner warn hidden"><b>Le Mac est sur le Wi-Fi des lunettes.</b> Pas d'internet pendant le transfert, c'est normal : il revient tout seul sur ton Wi-Fi à la fin. Ne change pas de réseau.</div>
+    <div id="connErr" class="banner danger hidden"></div>
+
+    <section id="busy" class="busy hidden">
+      <div class="busy-head">
+        <div class="spinner"></div>
+        <div class="busy-text"><b id="busyLabel"></b><span id="busyDetail"></span></div>
+        <button id="cancelBtn" class="ghost small">Annuler</button>
+      </div>
+      <div class="bar hidden" id="busyBarWrap"><div id="busyBar"></div></div>
+      <div class="busy-nums" id="busyNums"></div>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Accueil -->
+    <section class="tab" id="tab-home">
+      <h1>Accueil</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>Les lunettes</h3>
+          <dl class="kv" id="homeDevice"></dl>
+        </div>
+        <div class="card">
+          <h3>État</h3>
+          <dl class="kv" id="homeStatus"><dt>—</dt><dd class="muted">Connecte les lunettes pour lire la batterie.</dd></dl>
+        </div>
+        <div class="card">
+          <h3>Photos et vidéos</h3>
+          <p id="homeGallery" class="muted">Connecte les lunettes pour voir leur galerie.</p>
+          <div class="row">
+            <button class="primary" id="homeImport">Importer ce qui manque</button>
+            <label class="check"><input type="checkbox" id="homeDeleteAfter"> puis supprimer des lunettes</label>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Sur le Mac</h3>
+          <p id="homeMac" class="muted">…</p>
+          <div class="row">
+            <button id="homeOpenFolder">Ouvrir le dossier</button>
+            <button id="homeDupes" class="hidden">Mettre les doublons à la corbeille</button>
+          </div>
+        </div>
+      </div>
+      <div class="card tips">
+        <h3>Pour que ça marche</h3>
+        <ul>
+          <li>Lunettes <b>hors de l'étui</b>, branches ouvertes, à côté du Mac.</li>
+          <li>Pendant un import, le Mac passe quelques minutes sur le Wi-Fi des lunettes et <b>perd internet</b>. Il revient tout seul sur ta box.</li>
+          <li>Si la connexion n'aboutit pas : coupe le Bluetooth de l'iPhone, mets les lunettes en mode appairage (bouton capture maintenu jusqu'au clignotement bleu), puis « Connecter ».</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Galerie des lunettes -->
+    <section class="tab hidden" id="tab-glasses">
+      <h1>Galerie des lunettes</h1>
+      <p class="muted" id="glassesSub"></p>
+      <div class="toolbar">
+        <div class="seg">
+          <button data-sel="all" class="small">Tout</button>
+          <button data-sel="none" class="small">Rien</button>
+          <button data-sel="missing" class="small">Pas sur le Mac</button>
+          <button data-sel="onmac" class="small">Déjà sur le Mac</button>
+        </div>
+        <span class="muted" id="selInfo"></span>
+        <div class="grow"></div>
+        <label class="check"><input type="checkbox" id="glDeleteAfter"> supprimer des lunettes après import vérifié</label>
+        <button id="importSelBtn" class="primary">Importer la sélection</button>
+        <button id="importMissingBtn">Importer ce qui manque</button>
+        <button id="deleteSelBtn" class="danger">Supprimer des lunettes</button>
+        <button id="previewsBtn" class="ghost">Charger les aperçus</button>
+      </div>
+      <div class="grid" id="glassesGrid"></div>
+      <div class="empty hidden" id="glassesEmpty"></div>
+    </section>
+
+    <!-- Sur le Mac -->
+    <section class="tab hidden" id="tab-mac">
+      <h1>Sur le Mac</h1>
+      <p class="muted" id="macSub"></p>
+      <div id="dupeBanner" class="banner info hidden"></div>
+      <div class="toolbar">
+        <div class="seg">
+          <button data-filter="all" class="small on">Tout</button>
+          <button data-filter="video" class="small">Vidéos</button>
+          <button data-filter="photo" class="small">Photos</button>
+        </div>
+        <div class="grow"></div>
+        <button id="macReload" class="ghost">Recharger</button>
+        <button id="macOpenFolder">Ouvrir dans le Finder</button>
+      </div>
+      <div class="grid" id="macGrid"></div>
+      <div class="empty hidden" id="macEmpty">Aucun fichier dans le dossier d'export pour l'instant.</div>
+    </section>
+
+    <!-- Contrôle -->
+    <section class="tab hidden" id="tab-control">
+      <h1>Contrôle et état</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>Déclencheur à distance</h3>
+          <p class="muted" id="shutterNote">Prend une photo ou filme avec les lunettes, comme le bouton capture.</p>
+          <div class="row" id="shutterButtons"></div>
+        </div>
+        <div class="card">
+          <h3>Horloge</h3>
+          <p class="muted">Remet les lunettes à l'heure du Mac (date des photos).</p>
+          <div class="row"><button id="clockBtn">Synchroniser l'heure</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>État détaillé</h3><button id="statusReadBtn" class="small">Relire</button></div>
+        <table class="table" id="statusTable"><tbody><tr><td class="muted">Connecte les lunettes pour lire leur état.</td></tr></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Identité</h3>
+        <dl class="kv" id="controlDevice"></dl>
+      </div>
+    </section>
+
+    <!-- Réglages -->
+    <section class="tab hidden" id="tab-settings">
+      <h1>Réglages</h1>
+      <div class="card">
+        <h3>Cette application</h3>
+        <div class="form">
+          <label>Dossier d'export<input type="text" id="pExport" spellcheck="false"></label>
+          <label>Pays du Wi-Fi des lunettes<input type="text" id="pCountry" maxlength="2" style="width:5em"></label>
+          <label class="check"><input type="checkbox" id="pPreviews"> Charger les aperçus à la connexion (Bluetooth, quelques secondes)</label>
+          <label class="check"><input type="checkbox" id="pDeleteAfter"> Supprimer des lunettes ce qui a été importé et vérifié</label>
+          <label class="check"><input type="checkbox" id="pKeepLogs"> Garder aussi les journaux de capteurs (IMU, images)</label>
+          <div class="row"><button class="primary" id="prefsSave">Enregistrer</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Réglages des lunettes</h3><button id="settingsReadBtn" class="small">Lire depuis les lunettes</button></div>
+        <p class="muted" id="settingsNote">Connecte les lunettes, puis « Lire depuis les lunettes ».</p>
+        <div id="settingsBox"></div>
+      </div>
+    </section>
+
+    <!-- Compte -->
+    <section class="tab hidden" id="tab-account">
+      <h1>Compte et appairage</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>Propriétaire</h3>
+          <dl class="kv" id="accOwner"></dl>
+        </div>
+        <div class="card">
+          <h3>Connexion Meta</h3>
+          <dl class="kv" id="accLogin"></dl>
+          <div class="row"><button id="checkLoginBtn">Vérifier auprès de Meta</button></div>
+          <p class="muted small">Utile seulement pour un nouvel appairage. L'import et le contrôle n'ont jamais besoin de Meta.
+            Si Meta refuse la connexion : double-clique <code>Install.command</code> dans le dossier du projet, puis « Plus d'options » &gt; « Se reconnecter à Meta ».</p>
+        </div>
+      </div>
+      <div class="card danger-zone">
+        <h3>Refaire l'appairage</h3>
+        <p>Rend ce Mac propriétaire des lunettes. À faire seulement après une réinitialisation des lunettes, ou si elles ne reconnaissent plus le Mac. <b>L'app Meta AI de l'iPhone perd les lunettes</b> tant qu'elles n'y sont pas reconfigurées.</p>
+        <ol class="small">
+          <li>Lunettes en mode appairage : bouton capture maintenu jusqu'au clignotement bleu.</li>
+          <li>Bluetooth de l'iPhone coupé.</li>
+          <li>Tape <code>APPAIRER</code> puis lance. Accepte la fenêtre « Se connecter » de macOS si elle apparaît.</li>
+        </ol>
+        <div class="row"><input type="text" id="pairConfirm" placeholder="APPAIRER" spellcheck="false" autocomplete="off"><button class="danger" id="pairBtn">Lancer l'appairage</button></div>
+      </div>
+    </section>
+
+    <!-- Journal -->
+    <section class="tab hidden" id="tab-log">
+      <h1>Journal</h1>
+      <div class="toolbar">
+        <label class="check"><input type="checkbox" id="logDebug"> détails techniques</label>
+        <div class="grow"></div>
+        <button id="logCopy" class="ghost small">Copier</button>
+      </div>
+      <div class="log" id="log"></div>
+    </section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+    <div class="row end" id="modalActions"></div>
+  </div>
+</div>
+
+<div id="viewer" class="viewer hidden">
+  <div class="viewer-bar"><span id="viewerName"></span><div class="grow"></div><a id="viewerDl" class="btn small">Télécharger</a><button id="viewerReveal" class="small">Afficher dans le Finder</button><button id="viewerClose" class="small">Fermer</button></div>
+  <div class="viewer-body" id="viewerBody"></div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
